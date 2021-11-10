@@ -21,6 +21,8 @@ public class GridManager : MonoBehaviour {
  
     void GenerateGrid() {
         _tiles = new Dictionary<Vector2, Tile>();
+
+        //Grass tile spawn
          for (int x = 0; x < _width / 2; x++) {
             for (int y = 0; y < _height; y++) {
 
@@ -33,6 +35,7 @@ public class GridManager : MonoBehaviour {
              }
         }
 
+        //Desert tile spawn
         for (int x = 8; x < _width ; x++) {
             for (int y = 0; y < _height; y++) {
 
@@ -44,12 +47,15 @@ public class GridManager : MonoBehaviour {
 
              }
         }
+        
         var spawnHuman = Instantiate(humanPrefab, new Vector3(_width / 4, _height / 2, -1), Quaternion.identity);
         var spawnOrc = Instantiate(orcPrefab, new Vector3(_width - (_width / 4), _height / 2, -1), Quaternion.identity);
 
+        //Camera setup
         _cam.transform.position = new Vector3((float)_width/2 -0.5f, (float)_height / 2 - 0.5f,-10);
     }
 
+    //Get tile position from dictionary
      public Tile GetTileAtPosition(Vector2 pos) {
         if (_tiles.TryGetValue(pos, out var tile)) return tile;
         return null;

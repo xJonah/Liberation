@@ -1,18 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static GameManager Instance;
+    public GameState GameState;
+
+    //Game manager Instance
+    void Awake()
     {
-        
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    //Start first GameState
+    void Start()
     {
-        
+        ChangeState(GameState.GenerateGrid);
     }
+
+    //Game state logic and switch function
+    public void ChangeState(GameState newState)
+    {
+        GameState = newState;
+        switch (newState)
+        {
+            case GameState.GenerateGrid:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+        }
+    }
+}
+
+//'Flow' of game
+public enum GameState
+{
+    GenerateGrid,
+    HumanTurn,
+    SpawnHumans,
+    OrcTurn,
+    SpawnOrcs
 }
