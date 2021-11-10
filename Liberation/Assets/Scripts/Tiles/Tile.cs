@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
  
 public abstract class Tile : MonoBehaviour {
 
@@ -21,7 +22,6 @@ public abstract class Tile : MonoBehaviour {
     {
         _highlight.SetActive(false);
     }
-
 
 }
 
