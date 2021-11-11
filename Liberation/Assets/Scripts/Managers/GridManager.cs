@@ -12,14 +12,15 @@ public class GridManager : MonoBehaviour {
 
     public GameObject humanPrefab;
     public GameObject orcPrefab;
-
     private Dictionary<Vector2, Tile> _tiles;
+    public static GridManager Instance;
 
-    void Start() {
-        GenerateGrid();
+    //GridManager instance created
+    void Awake() {
+        Instance = this;
     }
  
-    void GenerateGrid() {
+    public void GenerateGrid() {
         _tiles = new Dictionary<Vector2, Tile>();
 
         //Grass tile spawn
@@ -49,10 +50,15 @@ public class GridManager : MonoBehaviour {
         }
         
         var spawnHuman = Instantiate(humanPrefab, new Vector3(_width / 4, _height / 2, -1), Quaternion.identity);
+        spawnHuman.name = $"Human 1";
         var spawnOrc = Instantiate(orcPrefab, new Vector3(_width - (_width / 4), _height / 2, -1), Quaternion.identity);
+        spawnOrc.name = $"Orc 1";
 
         //Camera setup
         _cam.transform.position = new Vector3((float)_width/2 -0.5f, (float)_height / 2 - 0.5f,-10);
+
+        //Active next game state
+        GameManager.Instance.ChangeState(GameState.HumanTurn);
     }
 
     //Get tile position from dictionary
@@ -60,4 +66,5 @@ public class GridManager : MonoBehaviour {
         if (_tiles.TryGetValue(pos, out var tile)) return tile;
         return null;
     } 
+
 }

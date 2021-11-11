@@ -27,6 +27,19 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.GenerateGrid:
+            GridManager.Instance.GenerateGrid();
+                break;
+
+                case GameState.HumanTurn:
+                break;
+
+                case GameState.SpawnHuman:
+                break;
+
+                case GameState.OrcTurn:
+                break;
+
+                case GameState.SpawnOrc:
                 break;
 
             default:
@@ -40,7 +53,7 @@ public enum GameState
 {
     GenerateGrid,
     HumanTurn,
-    SpawnHumans,
+    SpawnHuman,
     OrcTurn,
-    SpawnOrcs
+    SpawnOrc
 }
