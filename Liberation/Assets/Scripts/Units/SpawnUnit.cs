@@ -6,6 +6,8 @@ using Photon.Pun;
 public class SpawnUnit : MonoBehaviour
 {
 
+//Test for game server
+
     public GameObject unitPrefab;
     public int minX, maxX, minY, maxY;
 
