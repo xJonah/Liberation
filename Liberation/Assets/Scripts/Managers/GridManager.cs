@@ -6,7 +6,7 @@ using Photon.Pun;
 using Random=UnityEngine.Random; 
 
 public class GridManager : MonoBehaviour {
-    [SerializeField] private int _width, _height;
+    [SerializeField] public int _width, _height;
     [SerializeField] private Tile _grassTile, _desertTile;
     [SerializeField] private Transform _cam;
 
@@ -55,15 +55,17 @@ public class GridManager : MonoBehaviour {
              }
         }
         
+        /*
         var spawnHuman = Instantiate(humanPrefab, new Vector3(_width / 4, _height / 2, -1), Quaternion.identity);
         spawnHuman.name = $"Human 1";
         var spawnOrc = Instantiate(orcPrefab, new Vector3(_width - (_width / 4), _height / 2, -1), Quaternion.identity);
         spawnOrc.name = $"Orc 1";
+        */
 
         //Camera setup
         _cam.transform.position = new Vector3((float)_width/2 -0.5f, (float)_height / 2 - 0.5f,-10);
 
-        //Active next game state
+        //Activate next game state
         //GameManager.Instance.ChangeState(GameState.HumanTurn);
     }
 
@@ -72,5 +74,12 @@ public class GridManager : MonoBehaviour {
         if (_tiles.TryGetValue(pos, out var tile)) return tile;
         return null;
     } 
+
+    public int getWidth() {
+        return _width;
+    }
+    public int getHeight() {
+        return _height;
+    }
 
 }
