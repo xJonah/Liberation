@@ -152,11 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f53644f5208ae4f8d60c950f2c61b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitPrefab: {fileID: 5937194384851612718, guid: 782ffcaba21cfe2409f1cfbe748068f1, type: 3}
-  minX: 1
-  maxX: 15
-  minY: 1
-  maxY: 8
 --- !u!4 &39648586
 Transform:
   m_ObjectHideFlags: 0
@@ -283,12 +278,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 874c621e0ae89a3459cd8faf14271856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _width: 16
-  _height: 9
-  _grassTile: {fileID: -2256311976503620060, guid: 66d799f90e563d14c96baeaa7b5b2b34, type: 3}
-  _desertTile: {fileID: -5479748635681559128, guid: b47fae5b5f86aa144990048eeeae419f, type: 3}
+  width: 16
+  height: 9
+  grassTile: {fileID: -2256311976503620060, guid: 66d799f90e563d14c96baeaa7b5b2b34, type: 3}
+  desertTile: {fileID: -5479748635681559128, guid: b47fae5b5f86aa144990048eeeae419f, type: 3}
   _cam: {fileID: 343291712}
-  humanPrefab: {fileID: 7740327830265875109, guid: 5b43222423f56004fbaa9999fe0f85a5, type: 3}
   orcPrefab: {fileID: 5937194384851612718, guid: 782ffcaba21cfe2409f1cfbe748068f1, type: 3}
 --- !u!4 &1438877627
 Transform:

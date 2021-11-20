@@ -11,9 +11,9 @@ public class GridManager : MonoBehaviour {
     [SerializeField] private Transform _cam;
 
     public GameObject orcPrefab;
-    public static GridManager Instance;
 
     /*
+    public static GridManager Instance;
     //GridManager instance created
     void Awake() {
         Instance = this;
