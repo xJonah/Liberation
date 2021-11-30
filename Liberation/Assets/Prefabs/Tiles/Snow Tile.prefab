@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &630785045452163954
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 428109957755961147, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_Color.b
+      value: 0.9395693
+      objectReference: {fileID: 0}
+    - target: {fileID: 428109957755961147, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9395693
+      objectReference: {fileID: 0}
+    - target: {fileID: 428109957755961147, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9622642
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318734474629961053, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7468526722314196108, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+      propertyPath: m_Name
+      value: Snow Tile
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+--- !u!1 &8026952562769059838 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7468526722314196108, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+  m_PrefabInstance: {fileID: 630785045452163954}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &950272806364902473 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 428109957755961147, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+  m_PrefabInstance: {fileID: 630785045452163954}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6827021219415270998 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6232572904115219748, guid: f1b1041d3f7ba4a4083993c1170d56b0, type: 3}
+  m_PrefabInstance: {fileID: 630785045452163954}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-1213577254033274652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8026952562769059838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87693ca74731d8468a80ee76b069c9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 950272806364902473}
+  _highlight: {fileID: 6827021219415270998}
+  _baseColor: {r: 1, g: 1, b: 1, a: 1}
+  _offsetColor: {r: 0.9245283, g: 0.9027234, b: 0.9027234, a: 1}

@@ -36,11 +36,19 @@ public class GameManager : MonoBehaviour
                 case GameState.SpawnHuman:
                 break;
 
+                case GameState.HumanAttack:
+                break;                
+
                 case GameState.OrcTurn:
                 break;
 
                 case GameState.SpawnOrc:
                 break;
+
+                case GameState.OrcAttack:
+                break;                    
+
+                //etc..
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
@@ -54,6 +62,8 @@ public enum GameState
     GenerateGrid,
     HumanTurn,
     SpawnHuman,
+    HumanAttack,
     OrcTurn,
-    SpawnOrc
+    SpawnOrc,
+    OrcAttack
 }

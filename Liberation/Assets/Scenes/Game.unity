@@ -241,6 +241,7 @@ MonoBehaviour:
   desertTile: {fileID: -5479748635681559128, guid: b47fae5b5f86aa144990048eeeae419f, type: 3}
   mountainTile: {fileID: -3544154550829758607, guid: f0375be5d40daee488b5960ce77d5828, type: 3}
   oceanTile: {fileID: 299204421358108592, guid: cd6dcd2aa0a0fc8418015d78cd00f2e8, type: 3}
+  snowTile: {fileID: -1213577254033274652, guid: 02fd26580fb8f154da3206a16f053dcd, type: 3}
   cam: {fileID: 343291712}
 --- !u!4 &1438877627
 Transform:
