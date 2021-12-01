@@ -12,6 +12,7 @@ public class GridManager : MonoBehaviour {
 
     private Dictionary<Vector2, Tile> tiles;
 
+    //Generate grid on scene start
     private void Start() {
         GenerateGrid();
     }
