@@ -16,9 +16,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
-    //Send to lobby scene once connected to server
+    //Send to Main Menu scene once connected to server
     public override void OnJoinedLobby() {
-        SceneManager.LoadScene("Lobby");
+        SceneManager.LoadScene("MainMenu");
     }
 
     

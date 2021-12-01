@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
                 case GameState.HumanTurn:
                 break;
 
-                case GameState.SpawnHuman:
+                case GameState.HumanSpawn:
                 break;
 
                 case GameState.HumanAttack:
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
                 case GameState.OrcTurn:
                 break;
 
-                case GameState.SpawnOrc:
+                case GameState.OrcSpawn:
                 break;
 
                 case GameState.OrcAttack:
@@ -61,9 +61,9 @@ public enum GameState
 {
     GenerateGrid,
     HumanTurn,
-    SpawnHuman,
+    HumanSpawn,
     HumanAttack,
     OrcTurn,
-    SpawnOrc,
+    OrcSpawn,
     OrcAttack
 }
