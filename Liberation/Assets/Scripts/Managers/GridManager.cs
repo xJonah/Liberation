@@ -71,7 +71,6 @@ public class GridManager : MonoBehaviour {
 
         //Camera setup
         cam.transform.position = new Vector3((float) width / 2 - 0.5f, (float) height / 2 - 0.5f, -10);
-
     }
 
 }

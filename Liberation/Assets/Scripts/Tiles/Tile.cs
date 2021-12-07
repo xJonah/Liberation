@@ -8,7 +8,7 @@ public abstract class Tile : MonoBehaviour {
     [SerializeField] protected SpriteRenderer _renderer;
     [SerializeField] private GameObject _highlight;
 
-    //Allow override in order for offset
+    //Allow override in order for Tiles to have checkerboard pattern or not
     public virtual void Init(int x, int y) {
         
     }
