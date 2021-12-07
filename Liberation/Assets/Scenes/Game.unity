@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textDisplay: {fileID: 1458485444}
-  timeValue: 12000
+  timeValue: 3600
 --- !u!4 &1970876367
 Transform:
   m_ObjectHideFlags: 0
