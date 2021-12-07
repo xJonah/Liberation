@@ -4,25 +4,39 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System.Text.RegularExpressions;
+using TMPro;
 
 public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 {
     public InputField createInput;
     public InputField joinInput;
-    [SerializeField] private GameObject validationText;
+    public TMP_Dropdown dropdown;
+    public TextMeshProUGUI validationText;
 
-    //Create lobby using text key + key validation (CyberSecurity)
+    //Create lobby using text key and time limit + key validation (CyberSecurity)
     public void CreateRoom() {
         var input = createInput.text;
         var hasNumber = new Regex(@"[0-9]+");
         var hasMinimum6Chars = new Regex(@".{6,}");
-     
-        if (hasMinimum6Chars.IsMatch(input) && hasNumber.IsMatch(input)) {
+        var timeLimitSet = dropdown.value;
+
+        if (!hasMinimum6Chars.IsMatch(input)) {
+            validationText.gameObject.SetActive(true);
+            validationText.text = "Room key must contain 6 characters";
+        }
+        else if (!hasNumber.IsMatch(input)) {
+            validationText.gameObject.SetActive(true);
+            validationText.text = "Room key must contain a number";
+        }
+        else if (timeLimitSet == 0) {
+            validationText.gameObject.SetActive(true);
+            validationText.text = "Please set a time limit";             
+        } 
+        else {
             PhotonNetwork.CreateRoom(createInput.text);
-        } else {
-            validationText.SetActive(true);
         }
     }
+    
 
     //Join lobby using text key
     public void JoinRoom() {
