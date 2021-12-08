@@ -10,16 +10,12 @@ public class GridManager : MonoBehaviour {
     [SerializeField] private Tile grassTile, desertTile, mountainTile, oceanTile, snowTile;
     [SerializeField] private Transform cam;
 
-    private Dictionary<Vector2, Tile> tiles;
-
     //Generate grid on scene start
     private void Start() {
         GenerateGrid();
     }
  
     public void GenerateGrid() {
-
-        tiles = new Dictionary<Vector2, Tile>();
 
         //Grass tile spawn (Top left)
          for (int x = 0; x < width / 2; x++) {
