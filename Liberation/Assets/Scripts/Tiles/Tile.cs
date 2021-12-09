@@ -39,7 +39,9 @@ public abstract class Tile : MonoBehaviour {
     }
 
     void OnMouseDown() {
-        
+        if(OccupiedUnit != null) {
+            
+        }
     }
 
 }
