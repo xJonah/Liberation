@@ -8,7 +8,8 @@ public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
     private List<ScriptableUnit> units;
-    public int width, height, tileArea;
+    private int width, height, tileArea;
+    public BaseUnit selectedUnit;
 
     //Load content of Units folder inside Resources folder
     void Awake() {
@@ -16,16 +17,15 @@ public class UnitManager : MonoBehaviour
         units = Resources.LoadAll<ScriptableUnit>("Units").ToList();
     }
 
-    public void getTileAmount() {
-        //width = GridManager.Instance.getWidth();
-        //height = GridManager.Instance.getHeight();
-        //tileArea = width * height;
+    public void GetTileAmount() {
+        width = GridManager.Instance.getWidth();
+        height = GridManager.Instance.getHeight();
+        tileArea = width * height;
     }
 
     public void SpawnHumans() {
         //var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
-        //var humanCount = tileArea / 4;
-        var humanCount = 4;
+        var humanCount = tileArea / 5;
 
         for(int i = 0; i < humanCount; i++) {
             var randomPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
@@ -40,7 +40,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnOrcs() {
 
-        var orcCount = 4;
+        var orcCount = tileArea / 5;
 
         for(int i = 0; i < orcCount; i++) {
             var randomPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
@@ -56,5 +56,9 @@ public class UnitManager : MonoBehaviour
     //Grab random prefab model of a certain faction
     private T GetRandomUnit<T>(Faction faction) where T : BaseUnit {
         return (T)units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First().UnitPrefab;
+    }
+
+    public void SetSelectedUnit(BaseUnit unit) {
+        selectedUnit = unit;
     }
 }

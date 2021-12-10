@@ -38,10 +38,9 @@ public abstract class Tile : MonoBehaviour {
         unit.OccupiedTile = this;
     }
 
+
     void OnMouseDown() {
-        if(OccupiedUnit != null) {
-            
-        }
+        
     }
 
 }

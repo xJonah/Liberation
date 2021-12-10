@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,10 +32,12 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.HumanSpawn:
+                UnitManager.Instance.GetTileAmount();
                 UnitManager.Instance.SpawnHumans();
                 break;
 
             case GameState.OrcSpawn:
+                UnitManager.Instance.GetTileAmount();
                 UnitManager.Instance.SpawnOrcs();
                 break;
 
