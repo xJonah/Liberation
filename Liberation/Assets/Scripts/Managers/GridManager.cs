@@ -8,7 +8,6 @@ using System.Linq;
 
 public class GridManager : MonoBehaviour {
     [SerializeField] public int width, height;
-    private int _width, _height;
     [SerializeField] private Tile grassTile, desertTile, mountainTile, oceanTile, snowTile;
     [SerializeField] private Transform cam;
 
@@ -116,7 +115,7 @@ public class GridManager : MonoBehaviour {
         cam.transform.position = new Vector3((float) width / 2 - 0.5f, (float) height / 2 - 0.5f, -10);
 
         //Switch to next game state
-        GameManager.Instance.ChangeState(GameState.HumanSpawn);
+        GameManager.Instance.ChangeState(GameState.SpawnUnits);
     }
 
     //Get random spawn tile that is empty

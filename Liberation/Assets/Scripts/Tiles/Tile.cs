@@ -27,6 +27,7 @@ public abstract class Tile : MonoBehaviour {
         _highlight.SetActive(false);
     }
 
+    //Grid square is occupied when a unit is on it
     public void SetUnit(BaseUnit unit) {
 
         if (unit.OccupiedTile != null) {
@@ -38,7 +39,7 @@ public abstract class Tile : MonoBehaviour {
         unit.OccupiedTile = this;
     }
 
-
+    //On mouse down highlight attackable tiles surrounding player
     void OnMouseDown() {
         
     }

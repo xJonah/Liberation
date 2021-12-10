@@ -9,7 +9,6 @@ public class UnitManager : MonoBehaviour
     public static UnitManager Instance;
     private List<ScriptableUnit> units;
     private int width, height, tileArea;
-    public BaseUnit selectedUnit;
 
     //Load content of Units folder inside Resources folder
     void Awake() {
@@ -17,48 +16,36 @@ public class UnitManager : MonoBehaviour
         units = Resources.LoadAll<ScriptableUnit>("Units").ToList();
     }
 
+    //Get the area of the grid from gridmanager
     public void GetTileAmount() {
         width = GridManager.Instance.getWidth();
         height = GridManager.Instance.getHeight();
         tileArea = width * height;
     }
 
-    public void SpawnHumans() {
-        //var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
-        var humanCount = tileArea / 5;
+    //Spawn units evenly on grid between the number of clans
+    public void SpawnUnits() {
+        //Divide grid up using the amount of players in the game
+        //var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount; 
+        var spawnCount = tileArea / 5;
 
-        for(int i = 0; i < humanCount; i++) {
-            var randomPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
-            var spawnedHuman = Instantiate(randomPrefab);
-            var randomSpawnTile = GridManager.Instance.GetSpawnTile();
+        for(int i = 0; i < spawnCount; i++) {
 
-            randomSpawnTile.SetUnit(spawnedHuman);
+            var randomHumanSpawnTile = GridManager.Instance.GetSpawnTile();
+            var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
+            var spawnedHuman = Instantiate(randomHumanPrefab);
+            randomHumanSpawnTile.SetUnit(spawnedHuman);
+
+            var randomOrcSpawnTile = GridManager.Instance.GetSpawnTile();
+            var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
+            var spawnedOrc = Instantiate(randomOrcPrefab);
+            randomOrcSpawnTile.SetUnit(spawnedOrc);           
         }
-
-        GameManager.Instance.ChangeState(GameState.OrcSpawn);
-    }
-
-    public void SpawnOrcs() {
-
-        var orcCount = tileArea / 5;
-
-        for(int i = 0; i < orcCount; i++) {
-            var randomPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
-            var spawnedOrc = Instantiate(randomPrefab);
-            var randomSpawnTile = GridManager.Instance.GetSpawnTile();
-
-            randomSpawnTile.SetUnit(spawnedOrc);
-        }
-
         GameManager.Instance.ChangeState(GameState.HumanTurn);
     }
 
     //Grab random prefab model of a certain faction
     private T GetRandomUnit<T>(Faction faction) where T : BaseUnit {
         return (T)units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First().UnitPrefab;
-    }
-
-    public void SetSelectedUnit(BaseUnit unit) {
-        selectedUnit = unit;
     }
 }

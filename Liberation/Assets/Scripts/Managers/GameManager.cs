@@ -31,14 +31,9 @@ public class GameManager : MonoBehaviour
                 GridManager.Instance.GenerateGrid();
                 break;
 
-            case GameState.HumanSpawn:
+            case GameState.SpawnUnits:
                 UnitManager.Instance.GetTileAmount();
-                UnitManager.Instance.SpawnHumans();
-                break;
-
-            case GameState.OrcSpawn:
-                UnitManager.Instance.GetTileAmount();
-                UnitManager.Instance.SpawnOrcs();
+                UnitManager.Instance.SpawnUnits();
                 break;
 
             case GameState.HumanTurn:
@@ -59,8 +54,7 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     GenerateGrid,
-    HumanSpawn,
-    OrcSpawn,
+    SpawnUnits,
     HumanTurn,
     OrcTurn
 }
