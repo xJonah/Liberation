@@ -27,7 +27,8 @@ public class UnitManager : MonoBehaviour
     public void SpawnUnits() {
         //Divide grid up using the amount of players in the game
         //var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount; 
-        var spawnCount = tileArea / 5;
+        var spawnCount = 8;
+
 
         for(int i = 0; i < spawnCount; i++) {
 
