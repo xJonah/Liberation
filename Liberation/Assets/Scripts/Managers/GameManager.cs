@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,28 +28,21 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.GenerateGrid:
-            //GridManager.Instance.GenerateGrid();
+                GridManager.Instance.GenerateGrid();
                 break;
 
-                case GameState.HumanTurn:
+            case GameState.SpawnUnits:
+                UnitManager.Instance.GetTileAmount();
+                UnitManager.Instance.SpawnUnits();
                 break;
 
-                case GameState.HumanSpawn:
+            case GameState.HumanTurn:
                 break;
 
-                case GameState.HumanAttack:
-                break;                
+            case GameState.OrcTurn:
+                break;                                
 
-                case GameState.OrcTurn:
-                break;
-
-                case GameState.OrcSpawn:
-                break;
-
-                case GameState.OrcAttack:
-                break;                    
-
-                //etc..
+            //etc..
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
@@ -60,10 +54,7 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     GenerateGrid,
+    SpawnUnits,
     HumanTurn,
-    HumanSpawn,
-    HumanAttack,
-    OrcTurn,
-    OrcSpawn,
-    OrcAttack
+    OrcTurn
 }
