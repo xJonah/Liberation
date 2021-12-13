@@ -10,6 +10,7 @@ public class UnitManager : MonoBehaviour
     public static UnitManager Instance;
     private List<ScriptableUnit> units;
     private int width, height, tileArea;
+    public BaseHuman selectedHuman;
 
     //Load content of Units folder inside Resources folder
     void Awake() {
@@ -50,6 +51,7 @@ public class UnitManager : MonoBehaviour
     private T GetRandomUnit<T>(Faction faction) where T : BaseUnit {
         return (T)units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First().UnitPrefab;
     }
+<<<<<<< Updated upstream
 =======
 
 public class UnitManager : MonoBehaviour
@@ -99,3 +101,12 @@ public class UnitManager : MonoBehaviour
 
 >>>>>>> a1c4b55bb0af492a22e836d03362aa9d6dc85439
 }
+=======
+    public void setSelectedHuman(BaseHuman human)
+    {
+        selectedHuman = human;
+    }
+
+
+
+>>>>>>> Stashed changes

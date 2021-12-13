@@ -66,6 +66,11 @@ public abstract class Tile : MonoBehaviour {
                 SetUnit(UnitManager.Instance.SelectedHuman);
                 UnitManager.Instance.SelectedHuman(null);
             }
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
         }
 
 
