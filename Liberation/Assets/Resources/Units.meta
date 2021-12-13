@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: b21b1e3c612a22940ad62c80ca736e49
+=======
+<<<<<<<< HEAD:Liberation/Assets/Resources/Units.meta
+guid: 5e1153df8ca16344db4082f08a0dafb5
+========
+guid: cc2dae95c6eed944982ee88859a85166
+>>>>>>>> a1c4b55bb0af492a22e836d03362aa9d6dc85439:Liberation/Assets/Prefabs/Units.meta
+>>>>>>> a1c4b55bb0af492a22e836d03362aa9d6dc85439
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -40,9 +40,37 @@ public abstract class Tile : MonoBehaviour {
     }
 
     //On mouse down highlight attackable tiles surrounding player
-    void OnMouseDown() {
-        
+    void OnMouseDown()
+    {
+        if (GameManager.Instance.GameState != GameState.HumanTurn) return;
+        if (OccupiedUnit != null)
+        {
+            if (OccupiedUnit.Faction == Faction.Hero)
+            {
+                UnitManager.Instance.SelectedHuman((BaseHuman)OccupiedUnit);
+            }
+            else
+            {
+                if (UnitManager.Instance.SelectedHuman != null)
+                {
+                    var orc = (BaseOrc)OccupiedUnit;
+                    Destroy(orc.gameObject);
+                    UnitManager.Instance.SelectedHuman(null);
+                }
+            }
+        }
+        else
+        {
+            if (UnitManager.Instance.SelectedHuman != null)
+            {
+                SetUnit(UnitManager.Instance.SelectedHuman);
+                UnitManager.Instance.SelectedHuman(null);
+            }
+        }
+
+
     }
+
 
 }
 
