@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class BackToMenu : MonoBehaviour
 {
-    //Allows user  to return to main menu from lobby
+    // Allows user  to return to main menu from lobby
     public void BackToMainMenu() {
         SceneManager.LoadScene("MainMenu");
     }

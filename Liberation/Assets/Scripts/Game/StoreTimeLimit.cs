@@ -6,7 +6,7 @@ public class StoreTimeLimit : MonoBehaviour
 {
     public static int timeLimit;
 
-    //Store value depending on time limit chosen by user. This is used for the game countdown timer.
+    // Store value depending on time limit chosen by user. This is used for the game countdown timer.
     public void HandleInputData(int val) {
         if (val == 0) {
             timeLimit = val;

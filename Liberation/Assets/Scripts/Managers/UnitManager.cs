@@ -10,25 +10,24 @@ public class UnitManager : MonoBehaviour
     private List<ScriptableUnit> units;
     private int width, height, tileArea;
 
-    //Load content of Units folder inside Resources folder
+    // Load content of Units folder inside Resources folder
     void Awake() {
         Instance = this;
         units = Resources.LoadAll<ScriptableUnit>("Units").ToList();
     }
 
-    //Get the area of the grid from gridmanager
+    // Get the area of the grid from gridmanager
     public void GetTileAmount() {
         width = GridManager.Instance.getWidth();
         height = GridManager.Instance.getHeight();
         tileArea = width * height;
     }
 
-    //Spawn units evenly on grid between the number of clans
+    // Spawn units evenly on grid between the number of clans
     public void SpawnUnits() {
-        //Divide grid up using the amount of players in the game
-        //var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount; 
+        // Divide grid up using the amount of players in the game
+        // var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount; 
         var spawnCount = 8;
-
 
         for(int i = 0; i < spawnCount; i++) {
 
@@ -45,7 +44,7 @@ public class UnitManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.HumanTurn);
     }
 
-    //Grab random prefab model of a certain faction
+    // Grab random prefab model of a certain faction
     private T GetRandomUnit<T>(Faction faction) where T : BaseUnit {
         return (T)units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First().UnitPrefab;
     }

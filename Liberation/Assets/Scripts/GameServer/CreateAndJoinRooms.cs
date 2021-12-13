@@ -13,7 +13,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public TMP_Dropdown dropdown;
     public TextMeshProUGUI validationText;
 
-    //Create lobby using text key and time limit + key validation (CyberSecurity)
+    // Create lobby using text key and time limit + key validation (CyberSecurity)
     public void CreateRoom() {
         var input = createInput.text;
         var hasNumber = new Regex(@"[0-9]+");
@@ -38,12 +38,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     }
     
 
-    //Join lobby using text key
+    // Join lobby using text key
     public void JoinRoom() {
         PhotonNetwork.JoinRoom(joinInput.text);
     }
 
-    //Send to game scene once lobby is joined or created
+    // Send to game scene once lobby is joined or created
     public override void OnJoinedRoom() {
         PhotonNetwork.LoadLevel("Game");
     }
