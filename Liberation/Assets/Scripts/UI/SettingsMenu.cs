@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class SettingsMenu : MonoBehaviour
 {
-    Resolution[] resolutions;
+    private Resolution[] resolutions;
     public TMP_Dropdown resolutionDropdown;
 
 
     // Find supported resolutions for the player's device
     void Start() {
-        resolutions = Screen.resolutions;
+        resolutions = Screen.resolutions.Where(resolution => resolution.refreshRate == 60).ToArray();
         resolutionDropdown.ClearOptions();
         List<string> resolutionOptions = new List<string>();
         int currentResolutionIndex = 0;
@@ -23,10 +24,12 @@ public class SettingsMenu : MonoBehaviour
             string option = resolutions[i].width + " x " + resolutions[i].height;
             resolutionOptions.Add(option);
 
+
             // Find the default resolution of a user's device
-            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height) {
+            if (resolutions[i].width.Equals(Screen.width) && resolutions[i].height.Equals(Screen.height)) {
                 currentResolutionIndex = i;
             }
+            
         }
         
         resolutionDropdown.AddOptions(resolutionOptions);

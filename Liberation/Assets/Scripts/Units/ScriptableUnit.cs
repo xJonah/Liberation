@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Allow creation of scriptable unit in unity
+// Allow creation of scriptable unit in unity
 [CreateAssetMenu(fileName = "New Unit", menuName = "Scriptable Unit")]
 
 public class ScriptableUnit : ScriptableObject
@@ -11,7 +11,7 @@ public class ScriptableUnit : ScriptableObject
     public BaseUnit UnitPrefab;
 }
 
-//Faction List
+// Faction List
 public enum Faction {
     Human,
     Orc,

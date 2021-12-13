@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DesertTile : Tile
 {
-    [SerializeField] private Color _baseColor, _offsetColor;
+    public Color _baseColor, _offsetColor;
 
     // Checkerboard colour pattern
     public override void Init(int x, int y) {
