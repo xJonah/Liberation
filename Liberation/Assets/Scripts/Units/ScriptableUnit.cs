@@ -14,5 +14,8 @@ public class ScriptableUnit : ScriptableObject
 //Faction List
 public enum Faction {
     Human,
-    Orc
+    Orc,
+    Elf,
+    Demon,
+    Dwarf
 }

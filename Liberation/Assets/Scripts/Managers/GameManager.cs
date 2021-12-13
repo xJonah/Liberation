@@ -42,7 +42,17 @@ public class GameManager : MonoBehaviour
             case GameState.OrcTurn:
                 break;                                
 
-            //etc..
+            case GameState.ElfTurn:
+                break;
+                
+            case GameState.DemonTurn:
+                break;                                                                
+
+            case GameState.DwarfTurn:
+                break;            
+
+            case GameState.DeclareWinner:
+                break; 
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
@@ -56,5 +66,10 @@ public enum GameState
     GenerateGrid,
     SpawnUnits,
     HumanTurn,
-    OrcTurn
+    OrcTurn,
+    ElfTurn,
+    DemonTurn,
+    DwarfTurn,
+    DeclareWinner
+
 }
