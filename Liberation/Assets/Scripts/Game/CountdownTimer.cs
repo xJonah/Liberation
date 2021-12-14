@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CountdownTimer : MonoBehaviour
 {
-    public Text textDisplay;
+    public TMP_Text textDisplay;
     private int dropdownValue;
     public float timeValue;
 
