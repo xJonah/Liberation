@@ -10,7 +10,7 @@ public class SoundManager : MonoBehaviour
     // If the user does not have a saved music volume, set the volume to 1
     void Start() {
         if (!PlayerPrefs.HasKey("musicVolume")) {
-            PlayerPrefs.SetFloat("musicVolume", 1);
+            PlayerPrefs.SetFloat("musicVolume", 0);
             Load();
         }
         else {
