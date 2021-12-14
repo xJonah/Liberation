@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CountdownTimer : MonoBehaviour
 {
-    public Text textDisplay;
+    public TMP_Text textDisplay;
     private int dropdownValue;
     public float timeValue;
 
-    //Get and Set Time on game start
+    // Get and Set Time on game start
     void Start() {
         GetTimeValue();
         SetTimeValue();
     }
 
-    //Countdown in real time
+    // Countdown in real time
     void Update() {
         if (timeValue > 0) {
             timeValue -= Time.deltaTime;
@@ -26,7 +27,7 @@ public class CountdownTimer : MonoBehaviour
         DisplayTime(timeValue);
     }
 
-    //Display time in Minutes and Seconds
+    // Display time in Minutes and Seconds
     void DisplayTime(float timeToDisplay) {
         if (timeToDisplay < 0) {
             timeToDisplay = 0;
@@ -41,12 +42,12 @@ public class CountdownTimer : MonoBehaviour
         textDisplay.text = string.Format("{000:00}:{001:00}", minutes, seconds);
     }
 
-    //Function to get time value from static storage
+    // Function to get time value from static storage
     void GetTimeValue() {
         dropdownValue = StoreTimeLimit.timeLimit;
     }
 
-    //Set time value depending on time limit user chose in lobby
+    // Set time value depending on the time limit the user chose in the lobby
     void SetTimeValue() {
         if (dropdownValue == 1) {
             timeValue = 30*60;

@@ -9,19 +9,19 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameState GameState;
 
-    //Game manager Instance
+    // Game manager Instance
     void Awake()
     {
         Instance = this;
     }
 
-    //Start first GameState
+    // Start first GameState
     void Start()
     {
         ChangeState(GameState.GenerateGrid);
     }
 
-    //Game state logic and switch function
+    // Game state logic and switch function
     public void ChangeState(GameState newState)
     {
         GameState = newState;
@@ -42,7 +42,17 @@ public class GameManager : MonoBehaviour
             case GameState.OrcTurn:
                 break;                                
 
-            //etc..
+            case GameState.ElfTurn:
+                break;
+                
+            case GameState.DemonTurn:
+                break;                                                                
+
+            case GameState.DwarfTurn:
+                break;            
+
+            case GameState.DeclareWinner:
+                break; 
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
@@ -50,11 +60,16 @@ public class GameManager : MonoBehaviour
     }
 }
 
-//'Flow' of game
+// 'Flow' of game
 public enum GameState
 {
     GenerateGrid,
     SpawnUnits,
     HumanTurn,
-    OrcTurn
+    OrcTurn,
+    ElfTurn,
+    DemonTurn,
+    DwarfTurn,
+    DeclareWinner
+
 }

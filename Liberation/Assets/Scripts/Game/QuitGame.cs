@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class QuitGame : MonoBehaviour
 {
-    //Allows user to quit game from main menu
+    // Allows user to quit game from main menu
     public void ExitGame () {
-    Application.Quit ();
-
+        Application.Quit ();
     }
 }

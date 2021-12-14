@@ -6,11 +6,11 @@ using Photon.Pun;
 using Random=UnityEngine.Random; 
 using System.Linq;
 
-public class GridManager : MonoBehaviour {
-    [SerializeField] public int width, height;
-    [SerializeField] private Tile grassTile, desertTile, mountainTile, oceanTile, snowTile;
-    [SerializeField] private Transform cam;
-
+public class GridManager : MonoBehaviour 
+{
+    public int width, height;
+    public Tile grassTile, desertTile, mountainTile, oceanTile, snowTile;
+    public Transform cam;
     public static GridManager Instance;
     private Dictionary<Vector2, Tile> tiles;
 
@@ -20,10 +20,10 @@ public class GridManager : MonoBehaviour {
  
     public void GenerateGrid() {
 
-        //Initialise Tile Dictionary
+        // Initialise Tile Dictionary
         tiles = new Dictionary<Vector2, Tile>();
 
-        //Grass tile spawn (Top left)
+        // Grass tile spawn (Top left)
         for (int x = 0; x < width / 2; x++) {
              for (int y = 7; y < height; y++) {
                 var spawnedGrassTiles = Instantiate(grassTile, new Vector3(x, y), Quaternion.identity);
@@ -42,10 +42,9 @@ public class GridManager : MonoBehaviour {
             }
         }
 
-        //Desert tile spawn (Top right)
+        // Desert tile spawn (Top right)
         for (int x = width / 2; x < width; x++) {
             for (int y = 7; y < height; y++) {
-
                 var spawnedDesertTiles = Instantiate(desertTile, new Vector3(x, y), Quaternion.identity);
                 spawnedDesertTiles.name = $"DesertTile {x} {y}";
                 spawnedDesertTiles.Init(x, y);
@@ -55,7 +54,6 @@ public class GridManager : MonoBehaviour {
 
         for (int x = 11; x < width; x++) {
             for (int y = 5; y < height - 3; y++) {
-
                 var spawnedDesertTiles = Instantiate(desertTile, new Vector3(x, y), Quaternion.identity);
                 spawnedDesertTiles.name = $"DesertTile {x} {y}";
                 spawnedDesertTiles.Init(x, y);
@@ -63,7 +61,7 @@ public class GridManager : MonoBehaviour {
              }
         }
 
-        //Mountain tile spawn (Bottom left)
+        // Mountain tile spawn (Bottom left)
         for (int x = 0; x < width / 2; x++) {
             for (int y = 0; y < height - 6; y++) {
                 var spawnedMountainTiles = Instantiate(mountainTile, new Vector3(x, y), Quaternion.identity);
@@ -82,7 +80,7 @@ public class GridManager : MonoBehaviour {
              }
         }        
 
-        //Ocean tile spawn (Bottom right)
+        // Ocean tile spawn (Bottom right)
         for (int x = 8; x < width; x++) {
             for (int y = 0; y < height - 6; y++) {
                 var spawnedOceanTiles = Instantiate(oceanTile, new Vector3(x, y), Quaternion.identity);
@@ -101,7 +99,7 @@ public class GridManager : MonoBehaviour {
              }
         }
 
-        //Snow tile spawn (Middle)
+        // Snow tile spawn (Middle)
         for (int x = 5; x < (width / 2 + 3); x++) {
             for (int y = 3; y < (height / 2 + 2) ; y++) {        
                 var spawnedSnowTiles = Instantiate(snowTile, new Vector3(x, y), Quaternion.identity);
@@ -112,7 +110,7 @@ public class GridManager : MonoBehaviour {
         }
 
         //Camera setup
-        cam.transform.position = new Vector3((float) width / 2 - 0.5f, (float) height / 2 - 0.5f, -10);
+        cam.transform.position = new Vector3((float) width / 2, (float) height / 2 - 0.5f, -10);
 
         //Switch to next game state
         GameManager.Instance.ChangeState(GameState.SpawnUnits);
