@@ -4,23 +4,20 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 
-public class ConnectToServer : MonoBehaviourPunCallbacks
+public class NetworkController : MonoBehaviourPunCallbacks
 {
-
     // Connect to Photon server during loading scene
-    private void Start() {
+    void Start() {
         PhotonNetwork.ConnectUsingSettings();
     }
 
     // Join the photon lobby
     public override void OnConnectedToMaster() {
+        Debug.Log("Connected to " + PhotonNetwork.CloudRegion + " Server!");
         PhotonNetwork.JoinLobby();
     }
 
-    // Send to Main Menu scene once connected to server
     public override void OnJoinedLobby() {
         SceneManager.LoadScene("MainMenu");
     }
-
-    
 }

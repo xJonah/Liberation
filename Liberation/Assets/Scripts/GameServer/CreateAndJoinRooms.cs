@@ -35,8 +35,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         else {
             PhotonNetwork.CreateRoom(createInput.text);
         }
-    }
-    
+    }    
 
     // Join lobby using text key
     public void JoinRoom() {
@@ -45,7 +44,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     // Send to game scene once lobby is joined or created
     public override void OnJoinedRoom() {
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("WaitingRoom");
     }
 
 }

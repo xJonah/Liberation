@@ -25,23 +25,34 @@ public class UnitManager : MonoBehaviour
 
     // Spawn units evenly on grid between the number of clans
     public void SpawnUnits() {
-        // Divide grid up using the amount of players in the game
-        // var humanCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount; 
-        var spawnCount = 8;
 
+        int spawnCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
+       
+        SpawnHumans(spawnCount);
+        SpawnOrcs(spawnCount);
+
+        GameManager.Instance.ChangeState(GameState.HumanTurn);
+        
+    }
+
+    public void SpawnHumans(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
 
-            var randomHumanSpawnTile = GridManager.Instance.GetSpawnTile();
-            var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
-            var spawnedHuman = Instantiate(randomHumanPrefab);
-            randomHumanSpawnTile.SetUnit(spawnedHuman);
+                var randomHumanSpawnTile = GridManager.Instance.GetSpawnTileVector();
+                var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
+                var spawnedHuman = PhotonNetwork.Instantiate(randomHumanPrefab.name, randomHumanSpawnTile, Quaternion.identity);
+                //randomHumanSpawnTile.SetUnit(spawnedHuman);
+            }
+    }
 
-            var randomOrcSpawnTile = GridManager.Instance.GetSpawnTile();
-            var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
-            var spawnedOrc = Instantiate(randomOrcPrefab);
-            randomOrcSpawnTile.SetUnit(spawnedOrc);           
-        }
-        GameManager.Instance.ChangeState(GameState.HumanTurn);
+    public void SpawnOrcs(int spawnCount) {
+        for(int i = 0; i < spawnCount; i++) {
+
+                var randomOrcSpawnTile = GridManager.Instance.GetSpawnTileVector();
+                var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
+                var spawnedOrc = PhotonNetwork.Instantiate(randomOrcPrefab.name, randomOrcSpawnTile, Quaternion.identity);
+                //randomOrcSpawnTile.SetUnit(spawnedOrc);           
+            }
     }
 
     // Grab random prefab model of a certain faction

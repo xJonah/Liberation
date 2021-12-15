@@ -121,6 +121,10 @@ public class GridManager : MonoBehaviour
         return tiles.Where(t => t.Key.x <= width && t.Value.Empty).OrderBy(tiles => Random.value).First().Value;
     }
 
+    public Vector2 GetSpawnTileVector() {
+        return tiles.Where(t => t.Key.x <= width && t.Value.Empty).OrderBy(tiles => Random.value).First().Key;
+    }    
+
     public int getWidth() {
         return width;
     }

@@ -7,7 +7,7 @@ using Photon.Pun;
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 using SystemHashtable = System.Collections.Hashtable;
 
-public class CountdownTimer : MonoBehaviour
+public class CountdownTimerNetwork : MonoBehaviour
 {
     public TMP_Text textDisplay;
     private int dropdownValue;
