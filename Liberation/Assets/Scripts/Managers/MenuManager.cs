@@ -46,8 +46,14 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void ShowBattleOutcome() {
-        // Print battle won or lost
+    public void ShowBattleWin() {
+        loseText.gameObject.SetActive(false);
+        winText.gameObject.SetActive(true);
+    }
+
+        public void ShowBattleLoss() {
+        winText.gameObject.SetActive(false);
+        loseText.gameObject.SetActive(true);
     }
 
 }

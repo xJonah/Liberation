@@ -13,7 +13,6 @@ public abstract class Tile : MonoBehaviour {
     public BaseUnit OccupiedUnit;
     public string tileName;
     public bool Empty => OccupiedUnit == null;
-    public UnityEngine.UI.Text winText, loseText;
 
     // Allow override in order for Tiles to have checkerboard pattern or not
     public virtual void Init(int x, int y) {
@@ -66,10 +65,12 @@ public abstract class Tile : MonoBehaviour {
                         //var result2 = BattleTwo();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);
+                            MenuManager.Instance.ShowBattleWin();
                             UnitManager.Instance.SetSelectedHuman(null);
                             GameManager.Instance.ChangeState(GameState.OrcTurn);
                         } else if (!result1) {
                             PhotonNetwork.Destroy(UnitManager.Instance.SelectedHuman.gameObject);
+                            MenuManager.Instance.ShowBattleLoss();
                             UnitManager.Instance.SetSelectedHuman(null);
                             GameManager.Instance.ChangeState(GameState.OrcTurn);
                         }
@@ -96,13 +97,15 @@ public abstract class Tile : MonoBehaviour {
                     var result1 = BattleOne();
                     //var result2 = BattleTwo();
                     if (result1) {
-                        PhotonNetwork.Destroy(enemy.gameObject);                     
+                        PhotonNetwork.Destroy(enemy.gameObject);   
+                        MenuManager.Instance.ShowBattleWin();                  
                         UnitManager.Instance.SetSelectedOrc(null);
 
                         //Next clan turn. Will be Elf after MVP
                         GameManager.Instance.ChangeState(GameState.HumanTurn);
                     } else if (!result1) {
-                        PhotonNetwork.Destroy(UnitManager.Instance.SelectedOrc.gameObject);           
+                        PhotonNetwork.Destroy(UnitManager.Instance.SelectedOrc.gameObject); 
+                        MenuManager.Instance.ShowBattleLoss();          
                         UnitManager.Instance.SetSelectedOrc(null);
                         //Next clan turn. Will be Elf after MVP
                         GameManager.Instance.ChangeState(GameState.HumanTurn);

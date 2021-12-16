@@ -5296,8 +5296,8 @@ MonoBehaviour:
   tileInfo: {fileID: 828453659}
   tileUnit: {fileID: 989965620}
   turnInfo: {fileID: 1325406730}
-  winText: {fileID: 0}
-  loseText: {fileID: 0}
+  winText: {fileID: 1324485945}
+  loseText: {fileID: 179357593}
 --- !u!1 &1788671246
 GameObject:
   m_ObjectHideFlags: 0
