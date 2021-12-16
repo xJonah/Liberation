@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DefaultCursor : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Default cursor for scenes that are not "Game" Scene
     void Start()
     {
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);

@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
             case GameState.DwarfTurn:
                 break;            
 
-            case GameState.DeclareWinner:
+            case GameState.EndGame:
                 break; 
 
             default:
@@ -70,6 +70,6 @@ public enum GameState
     ElfTurn,
     DemonTurn,
     DwarfTurn,
-    DeclareWinner
+    EndGame
 
 }

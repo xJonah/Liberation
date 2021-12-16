@@ -86,5 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 6483236233995437400}
   _highlight: {fileID: 754188786961192775}
+  OccupiedUnit: {fileID: 0}
+  tileName: Mountain
   _baseColor: {r: 0.254717, g: 0.24150054, b: 0.24150054, a: 1}
   _offsetColor: {r: 0, g: 0, b: 0, a: 1}

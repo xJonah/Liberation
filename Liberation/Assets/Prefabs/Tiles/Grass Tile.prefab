@@ -86,5 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 1769053683157255866}
   _highlight: {fileID: 5405040035008713893}
+  OccupiedUnit: {fileID: 0}
+  tileName: Grassland
   _baseColor: {r: 0.36378717, g: 1, b: 0, a: 1}
   _offsetColor: {r: 0.27204195, g: 0.7924528, b: 0.21306513, a: 1}

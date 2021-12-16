@@ -116,21 +116,19 @@ public class GridManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.SpawnUnits);
     }
 
-    //Get random spawn tile that is empty
+    // Get random spawn tile that is empty
     public Tile GetSpawnTile() {
         return tiles.Where(t => t.Key.x <= width && t.Value.Empty).OrderBy(tiles => Random.value).First().Value;
     }
 
+    // Get random spawn tile vector
     public Vector2 GetSpawnTileVector() {
-        return tiles.Where(t => t.Key.x <= width && t.Value.Empty).OrderBy(tiles => Random.value).First().Key;
-    }    
+        return tiles.Where(t => t.Key.x <= width).OrderBy(tiles => Random.value).First().Key;
+    } 
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
+    // Return the numbers of territories
+    public int GetTileArea() {
+        return width * height;
     }
 
 }

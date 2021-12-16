@@ -17,6 +17,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    // Load main menu after connecting to server
     public override void OnJoinedLobby() {
         SceneManager.LoadScene("MainMenu");
     }
