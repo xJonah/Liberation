@@ -102,5 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 5292126752967164792}
   _highlight: {fileID: 1945298353905062247}
+  OccupiedUnit: {fileID: 0}
+  tileName: Desert
   _baseColor: {r: 1, g: 0.6513464, b: 0, a: 1}
   _offsetColor: {r: 0.9829347, g: 1, b: 0, a: 1}

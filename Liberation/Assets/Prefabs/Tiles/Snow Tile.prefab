@@ -98,5 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 950272806364902473}
   _highlight: {fileID: 6827021219415270998}
+  OccupiedUnit: {fileID: 0}
+  tileName: Snow
   _baseColor: {r: 1, g: 1, b: 1, a: 1}
   _offsetColor: {r: 0.9245283, g: 0.9027234, b: 0.9027234, a: 1}

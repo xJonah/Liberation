@@ -4,46 +4,74 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
-using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
-using SystemHashtable = System.Collections.Hashtable;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class CountdownTimer : MonoBehaviour
+
+public class CountdownTimerNetwork : MonoBehaviour
 {
-    public TMP_Text textDisplay;
+    public TMP_Text timerUI;
     private int dropdownValue;
-    public float roundTime;
+    
+    private float roundTime;
+    public float timer;
+    private bool gameStart = false;
 
     // Get and Set Time on game start
     void Start() {
-        GetRoundTime();
-        SetRoundTime();
+
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            GetRoundTime();
+            SetRoundTime();
+            timer = roundTime;
+            gameStart = true;
+            Hashtable ht = new Hashtable() {{"Time", timer}};
+            PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
+        }
+        else {
+            timer = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
+            gameStart = true;
+        }
+        
     }
 
     // Countdown in real time
     void Update() {
-        if (roundTime > 0) {
-            roundTime -= Time.deltaTime;
-        } 
-        else {
-            roundTime = 0;
+
+        if (!gameStart) {
+            return;
         }
-        DisplayTime(roundTime);
+
+        timer -= Time.deltaTime;
+        Hashtable ht = PhotonNetwork.CurrentRoom.CustomProperties;
+        ht.Remove("Time");
+        ht.Add("Time", timer);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
+        DisplayTime(timer);
+
+        if(timer <= 0) {
+            PhotonNetwork.DestroyAll();
+        }
     }
+
 
     // Display time in Minutes and Seconds
     void DisplayTime(float timeToDisplay) {
+
         if (timeToDisplay < 0) {
             timeToDisplay = 0;
         } 
         else if (timeToDisplay > 0) {
             timeToDisplay += 1;
         }
+        
 
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-
-        textDisplay.text = string.Format("{000:00}:{001:00}", minutes, seconds);
+        timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        //timerUI.text = $"{minutes}:{seconds}";
     }
+    
 
     // Function to get time value from static storage
     void GetRoundTime() {
