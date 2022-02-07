@@ -6,68 +6,65 @@ using TMPro;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-
-public class CountdownTimerNetwork : MonoBehaviour
+public class CountdownTimerSync : MonoBehaviour
 {
     public TMP_Text timerUI;
     private int dropdownValue;
-    
-    private float roundTime;
-    public float timer;
-    private bool gameStart = false;
+    private double roundTime, startTime;
+    private bool startTimer = false;
+    public float decTimer;
+    private double incTimer;
 
-    // Get and Set Time on game start
-    void Start() {
-
-        if (PhotonNetwork.LocalPlayer.IsMasterClient)
-        {
+    void Start()
+    {
+        if (PhotonNetwork.LocalPlayer.IsMasterClient) {
             GetRoundTime();
-            SetRoundTime();
-            timer = roundTime;
-            gameStart = true;
-            Hashtable ht = new Hashtable() {{"Time", timer}};
+            CalculateRoundTime();
+            
+            Hashtable hash = new Hashtable();
+            hash.Add("RoundTime", roundTime);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+
+            Hashtable ht = new Hashtable();
+            ht.Add("StartTime", PhotonNetwork.Time);
             PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
-        }
-        else {
-            timer = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
-            gameStart = true;
-        }
-        
-    }
 
-    // Countdown in real time
-    void Update() {
+            startTimer = true;
 
-        if (!gameStart) {
-            return;
-        }
-
-        timer -= Time.deltaTime;
-        Hashtable ht = PhotonNetwork.CurrentRoom.CustomProperties;
-        ht.Remove("Time");
-        ht.Add("Time", timer);
-        PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
-        DisplayTime(timer);
-
-        if(timer <= 0) {
-            PhotonNetwork.DestroyAll();
+        } else {
+            roundTime = double.Parse(PhotonNetwork.CurrentRoom.CustomProperties["RoundTime"].ToString());
+            startTime = double.Parse(PhotonNetwork.CurrentRoom.CustomProperties["StartTime"].ToString());
+            startTimer = true;
         }
     }
 
+    void Update()
+    {
+        if (!startTimer) return;
 
-    // Display time in Minutes and Seconds
+        incTimer = PhotonNetwork.Time - startTime;
+        decTimer = (float)(roundTime - incTimer);
+        DisplayTime(decTimer);
+
+        if (decTimer <= 0) {
+            //End game and declare winner
+        }
+    }
+
+        // Display time in Minutes and Seconds
     void DisplayTime(float timeToDisplay) {
 
+        
         if (timeToDisplay < 0) {
             timeToDisplay = 0;
         } 
+        
         else if (timeToDisplay > 0) {
             timeToDisplay += 1;
         }
         
-
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+        double minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        double seconds = Mathf.FloorToInt(timeToDisplay % 60);
         timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         //timerUI.text = $"{minutes}:{seconds}";
     }
@@ -79,7 +76,7 @@ public class CountdownTimerNetwork : MonoBehaviour
     }
 
     // Set time value depending on the time limit the user chose in the lobby
-    void SetRoundTime() {
+    void CalculateRoundTime() {
         if (dropdownValue == 1) {
             roundTime = 30*60;
         }
@@ -99,4 +96,5 @@ public class CountdownTimerNetwork : MonoBehaviour
             roundTime = 999*60;
         }
     }
+
 }
