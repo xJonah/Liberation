@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
  
 public abstract class Tile : MonoBehaviour {
 
@@ -36,19 +37,21 @@ public abstract class Tile : MonoBehaviour {
     // Grid square is occupied when a unit is on it
     public void SetUnit(BaseUnit unit) {
 
-        //if(PhotonNetwork.LocalPlayer.IsMasterClient) {
-        if (unit.OccupiedTile != null) {
-            unit.OccupiedTile.OccupiedUnit = null;
-        }
-        
-        
-        unit.transform.position = transform.position;
-        OccupiedUnit = unit;
-        unit.OccupiedTile = this;
-        //}
-    }
+        if (PhotonNetwork.LocalPlayer.IsMasterClient) {
+            if (unit.OccupiedTile != null) {
+                unit.OccupiedTile.OccupiedUnit = null;
+            }
 
-    
+            unit.transform.position = transform.position;
+            OccupiedUnit = unit;
+            unit.OccupiedTile = this;
+        }
+        else {
+            OccupiedUnit = unit;
+            unit.OccupiedTile = this;
+        }
+            
+    }
 
     //On mouse down highlight attackable tiles surrounding player
     void OnMouseDown() {
