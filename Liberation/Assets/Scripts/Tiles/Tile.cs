@@ -14,7 +14,17 @@ public abstract class Tile : MonoBehaviour {
     public BaseUnit OccupiedUnit;
     public string tileName;
     public bool Empty => OccupiedUnit == null;
-    private Dictionary<Vector2, Tile> tiles = GridManager.Instance.GetTiles();
+    
+    private Dictionary<Vector2, Tile> tiles;
+
+    public Tile() {
+
+        tiles = new Dictionary<Vector2, Tile>();
+        
+        if (GridManager.Instance.GetTiles() == null){
+            tiles = GridManager.Instance.GetTiles();
+        }
+    }
 
     // Allow override in order for Tiles to have checkerboard pattern or not
     public virtual void Init(int x, int y) {

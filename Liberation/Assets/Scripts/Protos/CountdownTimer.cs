@@ -15,24 +15,8 @@ public class CountdownTimer : MonoBehaviour
 
     void Start()
     {
-        if (PhotonNetwork.LocalPlayer.IsMasterClient) {
-            GetRoundTime();
-            CalculateRoundTime();
-
-            Hashtable hash = new Hashtable();
-            startTime = true;
-            hash.Add("Time", time);
-            PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
-
-        }
-        else {
-            //time = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
-            time = float.Parse(PhotonNetwork.CurrentRoom.CustomProperties["Time"].ToString());
-
-            if (time != 0) {
-                startTime = true;
-            }
-        }    
+        startTime = true;
+        time = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
     }
 
     void Update()
@@ -45,8 +29,9 @@ public class CountdownTimer : MonoBehaviour
             time -= Time.deltaTime;
         }
     
+        //End game on timer completion
         if (time <= 0) {
-            //End game and declare winner
+            GameManager.Instance.ChangeState(GameState.EndGame);
         }
 
         DisplayTime(time);
@@ -66,36 +51,5 @@ public class CountdownTimer : MonoBehaviour
         double minutes = Mathf.FloorToInt(timeToDisplay / 60);
         double seconds = Mathf.FloorToInt(timeToDisplay % 60);
         timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
-
-    
-    // Function to get time value from static storage
-    void GetRoundTime() {
-        dropdownValue = StoreTimeLimit.timeLimit;
-    }
-
-    // Set time value depending on the time limit the user chose in the lobby
-    void CalculateRoundTime() {
-        if (dropdownValue == 1) {
-            time = 30*60;
-        }
-        else if (dropdownValue == 2) {
-            time = 45*60;
-        }
-        else if (dropdownValue == 3) {
-            time = 60*60;
-        }
-        else if (dropdownValue == 4) {
-            time = 90*60;
-        }
-        else if (dropdownValue == 5) {
-            time = 120*60;
-        }
-        else if (dropdownValue == 6) {
-            time = 999*60;
-        }
-        else {
-            Debug.Log("Invalid Time");
-        }
     }
 }

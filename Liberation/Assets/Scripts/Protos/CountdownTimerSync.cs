@@ -48,6 +48,7 @@ public class CountdownTimerSync : MonoBehaviour
 
         if (decTimer <= 0) {
             //End game and declare winner
+            GameManager.Instance.ChangeState(GameState.EndGame);
         }
     }
 

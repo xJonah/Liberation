@@ -20,7 +20,8 @@ public class SendToGame : MonoBehaviourPunCallbacks
     // In waiting screen, wait for players before master client can start game
     void Update() {
         //Set to 4 players min later
-        if(PhotonNetwork.LocalPlayer.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 1) {
+        //if(PhotonNetwork.LocalPlayer.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > 3) {}
+        if(PhotonNetwork.LocalPlayer.IsMasterClient) {
             waitingButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(true);
             startButton.gameObject.SetActive(true);
