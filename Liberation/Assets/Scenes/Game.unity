@@ -712,7 +712,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852, y: -83}
+  m_AnchoredPosition: {x: 817, y: -97}
   m_SizeDelta: {x: 168.5515, y: 60.1303}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179357593
@@ -937,7 +937,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.5
+  orthographic size: 4.8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1342,7 +1342,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852, y: 261.07}
+  m_AnchoredPosition: {x: 817, y: 261.07}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &636755698
@@ -2206,7 +2206,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852.00006, y: 211.51}
+  m_AnchoredPosition: {x: 817, y: 211.51}
   m_SizeDelta: {x: 131.38, y: 49.1221}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &828453661
@@ -3076,7 +3076,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852.00006, y: 104}
+  m_AnchoredPosition: {x: 817, y: 104}
   m_SizeDelta: {x: 131.38, y: 49.1221}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &989965622
@@ -3910,7 +3910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852, y: 42}
+  m_AnchoredPosition: {x: 817.00006, y: 42}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1262648249
@@ -4044,7 +4044,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852, y: -83}
+  m_AnchoredPosition: {x: 817, y: -97}
   m_SizeDelta: {x: 168.5515, y: 60.1303}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1324485945
@@ -4124,7 +4124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852.00006, y: -7.561}
+  m_AnchoredPosition: {x: 817, y: -7.5611}
   m_SizeDelta: {x: 131.38, y: 49.1221}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1325406732
@@ -4418,8 +4418,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 874c621e0ae89a3459cd8faf14271856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 16
-  height: 10
+  width: 12
+  height: 8
   grassTile: {fileID: -2256311976503620060, guid: 66d799f90e563d14c96baeaa7b5b2b34, type: 3}
   desertTile: {fileID: -5479748635681559128, guid: b47fae5b5f86aa144990048eeeae419f, type: 3}
   mountainTile: {fileID: -3544154550829758607, guid: f0375be5d40daee488b5960ce77d5828, type: 3}
@@ -5086,7 +5086,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852, y: 354}
+  m_AnchoredPosition: {x: 817.00006, y: 360}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1665639216
@@ -5458,7 +5458,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 873.0596, y: 462.71472}
+  m_AnchoredPosition: {x: 817, y: 463}
   m_SizeDelta: {x: 120.6345, y: 44.9258}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1797006925
@@ -5515,8 +5515,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -6143,9 +6143,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 609584096}
-        m_TargetAssemblyTypeName: BackToMenu, Assembly-CSharp
-        m_MethodName: BackToMainMenu
+      - m_Target: {fileID: 306584625}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6155,9 +6155,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 306584625}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
+      - m_Target: {fileID: 609584096}
+        m_TargetAssemblyTypeName: BackToMenu, Assembly-CSharp
+        m_MethodName: BackToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6459,7 +6459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerUI: {fileID: 1797006925}
-  roundTime: 0
+  time: 0
 --- !u!1 &2014782563
 GameObject:
   m_ObjectHideFlags: 0
@@ -6786,7 +6786,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 852, y: 153.56}
+  m_AnchoredPosition: {x: 817, y: 153.56}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2075516973

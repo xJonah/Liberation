@@ -14,6 +14,7 @@ public abstract class Tile : MonoBehaviour {
     public BaseUnit OccupiedUnit;
     public string tileName;
     public bool Empty => OccupiedUnit == null;
+    private Dictionary<Vector2, Tile> tiles = GridManager.Instance.GetTiles();
 
     // Allow override in order for Tiles to have checkerboard pattern or not
     public virtual void Init(int x, int y) {
@@ -24,7 +25,6 @@ public abstract class Tile : MonoBehaviour {
     void OnMouseEnter() {
         _highlight.SetActive(true);
         MenuManager.Instance.ShowTileInfo(this);
-
     }
 
     void OnMouseExit()
@@ -50,11 +50,25 @@ public abstract class Tile : MonoBehaviour {
             OccupiedUnit = unit;
             unit.OccupiedTile = this;
         }
-            
+    }
+
+    void OnMouseUp() {
+        ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+
+        foreach (Vector2 v in tileVectors) {
+            var tile = tiles[v];
+            tile._highlight.SetActive(false);
+        }
     }
 
     //On mouse down highlight attackable tiles surrounding player
     void OnMouseDown() {
+        ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+
+        foreach (Vector2 v in tileVectors) {
+            var tile = tiles[v];
+            tile._highlight.SetActive(true);
+        }
 
         if (GameManager.Instance.GameState == GameState.HumanTurn) {
             if (OccupiedUnit != null) {
@@ -142,7 +156,6 @@ public abstract class Tile : MonoBehaviour {
         else {
             result = false;
         }
-
 
         return result;
     }
