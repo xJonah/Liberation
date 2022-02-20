@@ -121,10 +121,12 @@ public class GridManager : MonoBehaviour
         return tiles.Where(t => t.Key.x <= width && t.Value.Empty).OrderBy(tiles => Random.value).First().Value;
     }
 
+    //Function to retrieve dictionary of all tiles
     public Dictionary<Vector2, Tile> GetTiles() {
         return tiles;
     }
 
+    //Function to retrieve the vectors of surrounding tiles in an arraylist
     public ArrayList GetSurroundingTiles(Tile tile) {
         Vector2 surroudingTileVector = tiles.FirstOrDefault(xy => xy.Value == tile).Key;
         
@@ -141,7 +143,6 @@ public class GridManager : MonoBehaviour
 
         return tileVectors;
     }
-    
 
     // Return the numbers of territories
     public int GetTileArea() {

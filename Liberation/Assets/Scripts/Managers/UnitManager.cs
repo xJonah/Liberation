@@ -57,6 +57,8 @@ public class UnitManager : MonoBehaviour
             var spawnedHumanUnit = spawnedHuman.GetComponent<BaseHuman>();
             randomHumanSpawnTile.SetUnit(spawnedHumanUnit); 
 
+            //Task - Spawn counter to each unit/tile
+
         }
     }
 

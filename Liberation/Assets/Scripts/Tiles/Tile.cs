@@ -18,12 +18,8 @@ public abstract class Tile : MonoBehaviour {
     private Dictionary<Vector2, Tile> tiles;
 
     public Tile() {
-
         tiles = new Dictionary<Vector2, Tile>();
-        
-        if (GridManager.Instance.GetTiles() == null){
-            tiles = GridManager.Instance.GetTiles();
-        }
+        tiles = GridManager.Instance.GetTiles();
     }
 
     // Allow override in order for Tiles to have checkerboard pattern or not
@@ -37,6 +33,7 @@ public abstract class Tile : MonoBehaviour {
         MenuManager.Instance.ShowTileInfo(this);
     }
 
+    // Remove highlight when no longer hovering over a specfic tile
     void OnMouseExit()
     {
         _highlight.SetActive(false);
@@ -45,7 +42,7 @@ public abstract class Tile : MonoBehaviour {
 
 
     // Grid square is occupied when a unit is on it
-    public void SetUnit(BaseUnit unit) {
+    public void SetUnit(BaseUnit unit) { //Task - Assign counter to each unit/tile
 
         if (PhotonNetwork.LocalPlayer.IsMasterClient) {
             if (unit.OccupiedTile != null) {
@@ -56,12 +53,14 @@ public abstract class Tile : MonoBehaviour {
             OccupiedUnit = unit;
             unit.OccupiedTile = this;
         }
+        //Only master client moves the initial position of spawned units
         else {
             OccupiedUnit = unit;
             unit.OccupiedTile = this;
         }
     }
 
+    //Surrounding tiles no longer highlighted
     void OnMouseUp() {
         ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
 
@@ -71,9 +70,11 @@ public abstract class Tile : MonoBehaviour {
         }
     }
 
-    //On mouse down highlight attackable tiles surrounding player
+    //On mouse down surrouding tiles are highlighted
     void OnMouseDown() {
         ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+
+        _highlight.SetActive(false);
 
         foreach (Vector2 v in tileVectors) {
             var tile = tiles[v];

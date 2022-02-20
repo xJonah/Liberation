@@ -11,6 +11,7 @@ public class SetTimerValue : MonoBehaviour
     private int dropdownValue;
     private float time;
 
+    //Set round time in custom properties of the room
     void Start() {
          
          if (PhotonNetwork.LocalPlayer.IsMasterClient) {
@@ -23,12 +24,12 @@ public class SetTimerValue : MonoBehaviour
         }
     }
     
-    // Function to get time value from static storage
+    // Retrieve chosen time value from static variable
     void GetRoundTime() {
         dropdownValue = StoreTimeLimit.timeLimit;
     }
 
-    // Set time value depending on the time limit the user chose in the lobby
+    // Calculate time flaot value depending on the time limit the user chose in the lobby
     void CalculateRoundTime() {
         if (dropdownValue == 1) {
             time = 30*60;
