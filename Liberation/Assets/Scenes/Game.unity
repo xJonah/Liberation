@@ -6981,6 +6981,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedHuman: {fileID: 0}
   SelectedOrc: {fileID: 0}
+  SelectedElf: {fileID: 0}
+  SelectedDwarf: {fileID: 0}
+  SelectedDemon: {fileID: 0}
   SelectedUnit: {fileID: 0}
 --- !u!4 &2116056248
 Transform:
