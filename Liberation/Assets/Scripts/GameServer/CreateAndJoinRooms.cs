@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using System.Text.RegularExpressions;
 using TMPro;
+using Photon.Realtime;
 
 public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 {
@@ -23,6 +24,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         var hasMinimum6Chars = new Regex(@".{6,}");
         var timeLimitSet = dropdown.value;
 
+        RoomOptions roomOptions = new RoomOptions() {
+            IsOpen = true,
+            MaxPlayers = (byte) 5,
+            PublishUserId = true
+        };
+
         if (!hasMinimum6Chars.IsMatch(input)) {
             validationText.gameObject.SetActive(true);
             validationText.text = "Room key must contain 6 characters";
@@ -36,7 +43,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             validationText.text = "Please set a time limit";             
         } 
         else {
-            PhotonNetwork.CreateRoom(createInput.text);
+            PhotonNetwork.CreateRoom(createInput.text, roomOptions, TypedLobby.Default);
         }
     }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Realtime;
 
 public class SendToGame : MonoBehaviourPunCallbacks
 {
@@ -16,6 +17,7 @@ public class SendToGame : MonoBehaviourPunCallbacks
     // When master client changes scene, other clients follow
     void Start() {
         PhotonNetwork.AutomaticallySyncScene = true;
+        UpdatePlayerList();
     }
 
     // In waiting screen, wait for players before master client can start game
@@ -32,17 +34,11 @@ public class SendToGame : MonoBehaviourPunCallbacks
         }
 
         playerNumber.text = PhotonNetwork.CurrentRoom.PlayerCount + " / 5";
-        
-        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList) {
-            string nickname = p.NickName;
-            playerNames.text = playerNames.text + nickname + "\n";
-        }
     }
 
     // Load Game Scene
     public void LoadGame() {
         PhotonNetwork.LoadLevel("Game");
-        
     }
 
     // Allow master client to close the room and return to main menu
@@ -50,5 +46,40 @@ public class SendToGame : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("Main Menu");
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
+    }
+
+    public void UpdatePlayerList() {
+
+        playerNames.text = "";
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList) {
+            string nickname = p.NickName;
+            playerNames.text += nickname + "\n" ;
+        }
+
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        UpdatePlayerList();
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        UpdatePlayerList();
+    }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        UpdatePlayerList();
+    }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        UpdatePlayerList();
     }
 }
