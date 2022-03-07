@@ -13,18 +13,22 @@ public class CountdownTimer : MonoBehaviour
     public float time;
     private bool startTime = false;
 
+    //Fetch round time from custom properties
     void Start()
     {
         startTime = true;
         time = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
     }
 
+    //Update timer throughout game
     void Update()
     {
+        //Double check if start() has been executed
         if (!startTime) {
             return;
         }
 
+        //Decrease timer
         if (time > 0) {
             time -= Time.deltaTime;
         }
@@ -33,7 +37,7 @@ public class CountdownTimer : MonoBehaviour
         if (time <= 0) {
             GameManager.Instance.ChangeState(GameState.EndGame);
         }
-
+        
         DisplayTime(time);
     }
 
@@ -43,7 +47,6 @@ public class CountdownTimer : MonoBehaviour
         if (timeToDisplay < 0) {
             timeToDisplay = 0;
         } 
-        
         else if (timeToDisplay > 0) {
             timeToDisplay += 1;
         } 

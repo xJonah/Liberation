@@ -6409,7 +6409,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1970876367}
-  - component: {fileID: 1970876366}
   - component: {fileID: 1970876368}
   m_Layer: 0
   m_Name: CountdownTimer
@@ -6418,20 +6417,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1970876366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970876365}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc2c415b008be954abcea8d9f36ba8b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerUI: {fileID: 1797006925}
-  decTimer: 0
 --- !u!4 &1970876367
 Transform:
   m_ObjectHideFlags: 0
@@ -6996,6 +6981,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedHuman: {fileID: 0}
   SelectedOrc: {fileID: 0}
+  SelectedElf: {fileID: 0}
+  SelectedDwarf: {fileID: 0}
+  SelectedDemon: {fileID: 0}
   SelectedUnit: {fileID: 0}
 --- !u!4 &2116056248
 Transform:
