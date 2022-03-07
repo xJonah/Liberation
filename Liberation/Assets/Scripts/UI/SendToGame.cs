@@ -11,6 +11,7 @@ public class SendToGame : MonoBehaviourPunCallbacks
     public Button waitingButton;
     public Button cancelButton;
     public TMP_Text playerNumber;
+    public TMP_Text playerNames;
 
     // When master client changes scene, other clients follow
     void Start() {
@@ -31,6 +32,11 @@ public class SendToGame : MonoBehaviourPunCallbacks
         }
 
         playerNumber.text = PhotonNetwork.CurrentRoom.PlayerCount + " / 5";
+        
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList) {
+            string nickname = p.NickName;
+            playerNames.text = playerNames.text + nickname + "\n";
+        }
     }
 
     // Load Game Scene

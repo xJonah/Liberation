@@ -12,6 +12,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public InputField joinInput;
     public TMP_Dropdown dropdown;
     public TextMeshProUGUI validationText;
+    public TextMeshProUGUI validationNameText;
+    public GameObject namePanel;
+    [SerializeField] private InputField playerName;
 
     // Create lobby using text key and time limit + key validation (CyberSecurity)
     public void CreateRoom() {
@@ -34,6 +37,19 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         } 
         else {
             PhotonNetwork.CreateRoom(createInput.text);
+        }
+    }
+
+    public void ChooseName() {
+
+        if (playerName.text != "") {
+            PhotonNetwork.NickName = playerName.text;
+            namePanel.SetActive(false);
+            validationNameText.gameObject.SetActive(false);
+        }
+        else {
+            validationNameText.gameObject.SetActive(true);
+            validationNameText.text = "Please choose a name!";
         }
     }    
 
