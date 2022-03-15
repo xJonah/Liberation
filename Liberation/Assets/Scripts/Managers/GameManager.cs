@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
+//, IPunObservable, IOnEventCallback
 {
     public static GameManager Instance;
     public GameState GameState;
@@ -60,6 +63,22 @@ public class GameManager : MonoBehaviour
     }
 }
 
+    #region PhotonEvents
+
+    //public void OnEvent(EventData photonEvent) {
+
+    //}
+
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+
+    //}
+
+    //private void DetectWinner() {
+
+    //}
+
+    #endregion
+
 // 'Flow' of game
 public enum GameState
 {
@@ -73,3 +92,6 @@ public enum GameState
     EndGame
 
 }
+
+
+

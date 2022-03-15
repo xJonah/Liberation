@@ -123,11 +123,13 @@ public abstract class Tile : MonoBehaviour {
                             PhotonNetwork.Destroy(enemy.gameObject);   
                             MenuManager.Instance.ShowBattleWin();                  
                             UnitManager.Instance.SetSelectedOrc(null);
-                            GameManager.Instance.ChangeState(GameState.ElfTurn);
+                            //GameManager.Instance.ChangeState(GameState.ElfTurn); 
+                            GameManager.Instance.ChangeState(GameState.HumanTurn); //For Development Process
                         } else if (!result1) {
                             MenuManager.Instance.ShowBattleLoss();          
                             UnitManager.Instance.SetSelectedOrc(null);
-                            GameManager.Instance.ChangeState(GameState.ElfTurn);
+                            //GameManager.Instance.ChangeState(GameState.ElfTurn);
+                            GameManager.Instance.ChangeState(GameState.HumanTurn); //For Development Process
                         }
                     }
                 }

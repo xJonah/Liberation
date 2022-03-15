@@ -17,6 +17,7 @@ public class CountdownTimer : MonoBehaviour
     void Start()
     {
         startTime = true;
+        
         time = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
     }
 

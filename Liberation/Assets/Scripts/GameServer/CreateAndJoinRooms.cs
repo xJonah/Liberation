@@ -51,6 +51,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
         if (playerName.text != "") {
             PhotonNetwork.NickName = playerName.text;
+            
             namePanel.SetActive(false);
             validationNameText.gameObject.SetActive(false);
         }

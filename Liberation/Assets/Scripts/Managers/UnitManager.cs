@@ -42,9 +42,9 @@ public class UnitManager : MonoBehaviour
             } else if (PhotonNetwork.CurrentRoom.PlayerCount == 5) { */
                 SpawnHumans(spawnCount);
                 SpawnOrcs(spawnCount);
-                SpawnDwarves(spawnCount);
-                SpawnElves(spawnCount);
-                SpawnDemons(spawnCount);
+                //SpawnDwarves(spawnCount);
+                //SpawnElves(spawnCount);
+                //SpawnDemons(spawnCount);
             //}
         
         GameManager.Instance.ChangeState(GameState.HumanTurn);
