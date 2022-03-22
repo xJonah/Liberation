@@ -6,91 +6,54 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Photon.Chat.Demo;
+using TMPro;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
     private ChatClient chatClient;
-    private string userId;
-    
-    public InputField messageInput;
-    public Text messageArea;
+    [SerializeField] private string playerName;
 
-    public void DebugReturn(DebugLevel level, string message)
+    public TMP_Text messageArea;
+    public TMP_InputField messageInput;
+
+    #region Methods
+
+    private void Awake()
     {
-        throw new System.NotImplementedException();
+        playerName = PhotonNetwork.LocalPlayer.NickName;
     }
 
-    public void OnChatStateChange(ChatState state)
-    {
-        throw new System.NotImplementedException();
-    }
-
-
-    public void OnPrivateMessage(string sender, object message, string channelName)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnSubscribed(string[] channels, bool[] results)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnUnsubscribed(string[] channels)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnUserSubscribed(string channel, string user)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnUserUnsubscribed(string channel, string user)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Start() {
-        Application.runInBackground = true;
-
-        if (string.IsNullOrEmpty(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat)) {
-            Debug.Log("No AppID provided");
-            return;
-        } 
-        else
-        {
-            GetConnected();
-        }
-    }
-
-    public void GetConnected()
+    void Start()
     {
         chatClient = new ChatClient(this)
         {
             ChatRegion = "EU"
         };
 
+        GetConnected();
+
+    }
+
+    public void GetConnected()
+    {
         Debug.Log("Connecting");
-        userId = PhotonNetwork.LocalPlayer.NickName;
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(userId));
+        chatClient.AuthValues = new Photon.Chat.AuthenticationValues(playerName);
+        ChatAppSettings chatSettings = PhotonNetwork.PhotonServerSettings.AppSettings.GetChatSettings();
+
+        chatClient.ConnectUsingSettings(chatSettings);
     }
 
     void Update()
     {
-        if (chatClient != null)
-        {
-            chatClient.Service();
-        }
+        chatClient.Service();
+
+        if (Input.GetKeyUp(KeyCode.Return)) { SendMsg(); }
     }
 
     public void OnConnected()
     {
+        Debug.Log("Connected");
         chatClient.Subscribe(new string[] { "World" });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
     }
@@ -104,7 +67,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         for (int i = 0; i < senders.Length; i++)
         {
-            messageArea.text += senders[i] + ": " + messages[i] + ".\n";
+            messageArea.text += senders[i] + ": " + messages[i] + "\n";
         }
     }
 
@@ -112,5 +75,54 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         string message = messageInput.text;
         chatClient.PublishMessage("World", message);
+        messageInput.text = "";
     }
+
+    #endregion
+
+
+    #region Interface Methods
+    public void DebugReturn(DebugLevel level, string message)
+    {
+        
+    }
+
+    public void OnChatStateChange(ChatState state)
+    {
+       
+    }
+
+
+    public void OnPrivateMessage(string sender, object message, string channelName)
+    {
+       
+    }
+
+    public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
+    {
+        
+    }
+
+    public void OnSubscribed(string[] channels, bool[] results)
+    {
+        
+    }
+
+    public void OnUnsubscribed(string[] channels)
+    {
+        
+    }
+
+    public void OnUserSubscribed(string channel, string user)
+    {
+        
+    }
+
+    public void OnUserUnsubscribed(string channel, string user)
+    {
+        
+    }
+
+    #endregion
+
 }
