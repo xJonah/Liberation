@@ -31,8 +31,18 @@ public class UnitManager : MonoBehaviour
     // Spawn units evenly on grid between the number of clans
     public void SpawnUnits() {
 
-        int spawnCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
-        
+        int spawnCount;
+
+        if (PhotonNetwork.CurrentRoom == null)
+        {
+            Debug.Log("Offline");
+            return;
+        }
+        else
+        {
+            spawnCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
+        }
+
         /*
             if (PhotonNetwork.CurrentRoom.PlayerCount == 4) {
                 SpawnHumans(spawnCount);

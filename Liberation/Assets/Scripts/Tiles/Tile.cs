@@ -37,7 +37,7 @@ public abstract class Tile : MonoBehaviour {
 
 
     // Grid square is occupied when a unit is on it
-    public void SetUnit(BaseUnit unit) { //Task - Assign counter to each unit/tile
+    public void SetUnit(BaseUnit unit) { //Task - Assign counter to each unit/tile as well
 
         if (PhotonNetwork.LocalPlayer.IsMasterClient) {
             if (unit.OccupiedTile != null) {
@@ -90,8 +90,7 @@ public abstract class Tile : MonoBehaviour {
                         }
 
                         var enemy = OccupiedUnit;
-                        var result1 = BattleOne();
-                        //var result2 = BattleTwo();
+                        var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);
                             UnitManager.Instance.SpawnNewHuman(enemy.OccupiedTile);
@@ -117,8 +116,7 @@ public abstract class Tile : MonoBehaviour {
                 else {
                     if(UnitManager.Instance.SelectedOrc != null) {
                         var enemy = OccupiedUnit;
-                        var result1 = BattleOne();
-                        //var result2 = BattleTwo();
+                        var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
                             MenuManager.Instance.ShowBattleWin();                  
@@ -145,8 +143,7 @@ public abstract class Tile : MonoBehaviour {
                 else {
                     if(UnitManager.Instance.SelectedElf != null) {
                         var enemy = OccupiedUnit;
-                        var result1 = BattleOne();
-                        //var result2 = BattleTwo();
+                        var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
                             MenuManager.Instance.ShowBattleWin();                  
@@ -172,8 +169,7 @@ public abstract class Tile : MonoBehaviour {
                 else {
                     if(UnitManager.Instance.SelectedDwarf != null) {
                         var enemy = OccupiedUnit;
-                        var result1 = BattleOne();
-                        //var result2 = BattleTwo();
+                        var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
                             MenuManager.Instance.ShowBattleWin();                  
@@ -200,8 +196,7 @@ public abstract class Tile : MonoBehaviour {
                 else {
                     if(UnitManager.Instance.SelectedDemon != null) {
                         var enemy = OccupiedUnit;
-                        var result1 = BattleOne();
-                        //var result2 = BattleTwo();
+                        var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
                             MenuManager.Instance.ShowBattleWin();                  
@@ -220,7 +215,7 @@ public abstract class Tile : MonoBehaviour {
     }
 
     //Dice 2vs2 Battles
-    public bool BattleOne() {
+    public bool DiceBattle() {
 
         bool result = false;
 
@@ -235,23 +230,6 @@ public abstract class Tile : MonoBehaviour {
             result = false;
         }
 
-        return result;
-    }
-
-    public bool BattleTwo() {
-        
-        bool result = false;
-
-        int playerDiceResult = Random.Range(1, 6);
-
-        int enemyDiceResult = Random.Range(1, 6);
-
-        if (playerDiceResult > enemyDiceResult) {
-            result = true;
-        } 
-        else {
-            result = false;
-        }
         return result;
     }
 

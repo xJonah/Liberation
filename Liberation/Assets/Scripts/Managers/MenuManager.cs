@@ -21,26 +21,37 @@ public class MenuManager : MonoBehaviour
 
     public void SetUIPlayerNames() {
 
-        ArrayList names = new ArrayList();
+        if (PhotonNetwork.CurrentRoom != null)
+        {
 
-        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList) {
-            names.Add(p.NickName);
-        }
-        
-        name1.text = (string) names[0];
-        name2.text = (string) names[1];
-        name3.text = (string) names[2];
-        name4.text = (string) names[3];
+            ArrayList names = new ArrayList();
 
-        if (PhotonNetwork.CurrentRoom.PlayerCount > 4) {
-            name5.gameObject.SetActive(true);
-            name5.text = (string) names[4];
+            foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+            {
+                names.Add(p.NickName);
+            }
+
+
+            name1.text = (string)names[0];
+            name2.text = (string)names[1];
+            name3.text = (string)names[2];
+            name4.text = (string)names[3];
+
+            if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+            {
+                name5.gameObject.SetActive(true);
+                name5.text = (string)names[4];
+            }
         }
     }
 
     //UI element to show the name of the biome and unit in a specific tile
     public void ShowTileInfo(Tile tile) {
 
+        if (PhotonNetwork.CurrentRoom == null)
+        {
+            return;
+        }
 
         if (tile == null) {
             tileInfo.SetActive(false);
@@ -64,7 +75,12 @@ public class MenuManager : MonoBehaviour
     //UI element stating which faction's turn it is
     public void ShowTurnInfo() {
 
-        if(GameManager.Instance.GameState == GameState.HumanTurn) {
+        if (PhotonNetwork.CurrentRoom == null)
+        {
+            return;
+        }
+
+        if (GameManager.Instance.GameState == GameState.HumanTurn) {
             turnInfo.GetComponentInChildren<Text>().text = "Human";
             border1.SetActive(true);
             border2.SetActive(false);

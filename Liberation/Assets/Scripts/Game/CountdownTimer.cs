@@ -17,8 +17,17 @@ public class CountdownTimer : MonoBehaviour
     void Start()
     {
         startTime = true;
-        
-        time = (float) PhotonNetwork.CurrentRoom.CustomProperties["Time"];
+
+        if (PhotonNetwork.CurrentRoom == null)
+        {
+            Debug.Log("Offline");
+            time = 30 * 60;
+            return;
+        }
+        else
+        {
+            time = (float)PhotonNetwork.CurrentRoom.CustomProperties["Time"];
+        }
     }
 
     //Update timer throughout game
