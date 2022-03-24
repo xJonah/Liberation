@@ -62,13 +62,26 @@ public abstract class Tile : MonoBehaviour {
             var tile = tiles[v];
             tile._highlight.SetActive(false);
         }
-    } */
+    } 
+    */
 
     //On mouse down surrouding tiles are highlighted
     void OnMouseDown() {
         tiles = new Dictionary<Vector2, Tile>();
         tiles = GridManager.Instance.GetTiles();
         ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+
+        if (GameManager.Instance.GameState == GameState.EndGame)
+        {
+            //Game has ended
+            return;
+        }
+        
+        else if (PhotonNetwork.IsConnected && !GameManager.Instance.IsMyTurn())
+        {
+            //Not my turn
+            return;
+        }
 
         //HUMAN TURN
         if (GameManager.Instance.GameState == GameState.HumanTurn) {
@@ -94,11 +107,11 @@ public abstract class Tile : MonoBehaviour {
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);
                             UnitManager.Instance.SpawnNewHuman(enemy.OccupiedTile);
-                            MenuManager.Instance.ShowBattleWin();
+                            //MenuManager.Instance.ShowBattleWin();
                             UnitManager.Instance.SetSelectedHuman(null);
                             GameManager.Instance.ChangeState(GameState.OrcTurn);
                         } else if (!result1) {
-                            MenuManager.Instance.ShowBattleLoss();
+                            //MenuManager.Instance.ShowBattleLoss();
                             UnitManager.Instance.SetSelectedHuman(null);
                             GameManager.Instance.ChangeState(GameState.OrcTurn);
                         }
@@ -119,12 +132,12 @@ public abstract class Tile : MonoBehaviour {
                         var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
-                            MenuManager.Instance.ShowBattleWin();                  
+                            //MenuManager.Instance.ShowBattleWin();                  
                             UnitManager.Instance.SetSelectedOrc(null);
                             //GameManager.Instance.ChangeState(GameState.ElfTurn); 
                             GameManager.Instance.ChangeState(GameState.HumanTurn); //For Development Process
                         } else if (!result1) {
-                            MenuManager.Instance.ShowBattleLoss();          
+                            //MenuManager.Instance.ShowBattleLoss();          
                             UnitManager.Instance.SetSelectedOrc(null);
                             //GameManager.Instance.ChangeState(GameState.ElfTurn);
                             GameManager.Instance.ChangeState(GameState.HumanTurn); //For Development Process
@@ -146,12 +159,12 @@ public abstract class Tile : MonoBehaviour {
                         var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
-                            MenuManager.Instance.ShowBattleWin();                  
+                            //MenuManager.Instance.ShowBattleWin();                  
                             UnitManager.Instance.SetSelectedElf(null);
                             GameManager.Instance.ChangeState(GameState.DwarfTurn);
                         } else if (!result1) {
                             PhotonNetwork.Destroy(UnitManager.Instance.SelectedElf.gameObject); 
-                            MenuManager.Instance.ShowBattleLoss();          
+                            //MenuManager.Instance.ShowBattleLoss();          
                             UnitManager.Instance.SetSelectedElf(null);
                             GameManager.Instance.ChangeState(GameState.DwarfTurn);
                         }
@@ -172,12 +185,12 @@ public abstract class Tile : MonoBehaviour {
                         var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
-                            MenuManager.Instance.ShowBattleWin();                  
+                           // MenuManager.Instance.ShowBattleWin();                  
                             UnitManager.Instance.SetSelectedDwarf(null);
                             GameManager.Instance.ChangeState(GameState.DemonTurn);
                         } else if (!result1) {
                             PhotonNetwork.Destroy(UnitManager.Instance.SelectedDwarf.gameObject); 
-                            MenuManager.Instance.ShowBattleLoss();          
+                           // MenuManager.Instance.ShowBattleLoss();          
                             UnitManager.Instance.SetSelectedDwarf(null);
                             GameManager.Instance.ChangeState(GameState.DemonTurn);
                         }
@@ -199,12 +212,12 @@ public abstract class Tile : MonoBehaviour {
                         var result1 = DiceBattle();
                         if (result1) {
                             PhotonNetwork.Destroy(enemy.gameObject);   
-                            MenuManager.Instance.ShowBattleWin();                  
+                          //  MenuManager.Instance.ShowBattleWin();                  
                             UnitManager.Instance.SetSelectedDemon(null);
                             GameManager.Instance.ChangeState(GameState.HumanTurn);
                         } else if (!result1) {
                             PhotonNetwork.Destroy(UnitManager.Instance.SelectedDemon.gameObject); 
-                            MenuManager.Instance.ShowBattleLoss();          
+                           // MenuManager.Instance.ShowBattleLoss();          
                             UnitManager.Instance.SetSelectedDemon(null);
                             GameManager.Instance.ChangeState(GameState.HumanTurn);
                         }

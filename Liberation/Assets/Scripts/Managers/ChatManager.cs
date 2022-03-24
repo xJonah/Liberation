@@ -46,7 +46,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     void Update()
     {
-        chatClient.Service();
+        if (chatClient != null) 
+        {
+            chatClient.Service();
+        }
 
         if (Input.GetKeyUp(KeyCode.Return)) { SendMsg(); }
     }
@@ -74,7 +77,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void SendMsg()
     {
         string message = messageInput.text;
-        chatClient.PublishMessage("World", message);
+        if (message != "")
+        {
+            chatClient.PublishMessage("World", message);
+        }
         messageInput.text = "";
     }
 

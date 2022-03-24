@@ -9,10 +9,10 @@ using Photon.Realtime;
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
-    [SerializeField] private GameObject tileInfo, tileUnit, turnInfo;
-    public Text winText, loseText;
+    public GameObject tileInfo, tileUnit; //turnInfo;
     public TMP_Text name1, name2, name3, name4, name5;
-    public GameObject border1, border2, border3, border4, border5;
+    //public GameObject border1, border2, border3, border4, border5;
+    
 
     void Awake() {
         Instance = this;
@@ -50,6 +50,8 @@ public class MenuManager : MonoBehaviour
 
         if (PhotonNetwork.CurrentRoom == null)
         {
+            tileInfo.GetComponentInChildren<Text>().text = "Offline";
+            tileUnit.GetComponentInChildren<Text>().text = "Offline";
             return;
         }
 
@@ -68,19 +70,21 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void Update() {
-        ShowTurnInfo();
+    void Update()
+    {
+        //ShowTurnInfo();
     }
 
-    //UI element stating which faction's turn it is
+
+    /*UI element stating which faction's turn it is
     public void ShowTurnInfo() {
 
-        if (PhotonNetwork.CurrentRoom == null)
+        if (!PhotonNetwork.IsConnected)
         {
-            return;
-        }
-
-        if (GameManager.Instance.GameState == GameState.HumanTurn) {
+            turnInfo.GetComponentInChildren<Text>().text = "Offline";
+        }                    
+        else if (GameManager.Instance.GameState == GameState.HumanTurn)
+        {
             turnInfo.GetComponentInChildren<Text>().text = "Human";
             border1.SetActive(true);
             border2.SetActive(false);
@@ -88,39 +92,53 @@ public class MenuManager : MonoBehaviour
             border4.SetActive(false);
             border5.SetActive(false);
         }
-        else if (GameManager.Instance.GameState == GameState.OrcTurn) {
+        else if (GameManager.Instance.GameState == GameState.OrcTurn)
+        {
             turnInfo.GetComponentInChildren<Text>().text = "Orc";
             border1.SetActive(false);
             border2.SetActive(true);
             border3.SetActive(false);
             border4.SetActive(false);
-            border5.SetActive(false);     
+            border5.SetActive(false);
         }
-        else if (GameManager.Instance.GameState == GameState.ElfTurn) {
-            turnInfo.GetComponentInChildren<Text>().text = "Elf"; 
+        else if (GameManager.Instance.GameState == GameState.ElfTurn)
+        {
+            turnInfo.GetComponentInChildren<Text>().text = "Elf";
             border1.SetActive(false);
             border2.SetActive(false);
             border3.SetActive(true);
             border4.SetActive(false);
-            border5.SetActive(false);    
+            border5.SetActive(false);
         }
-        else if (GameManager.Instance.GameState == GameState.DemonTurn) {
-            turnInfo.GetComponentInChildren<Text>().text = "Demon"; 
+        else if (GameManager.Instance.GameState == GameState.DemonTurn)
+        {
+            turnInfo.GetComponentInChildren<Text>().text = "Demon";
             border1.SetActive(false);
             border2.SetActive(false);
             border3.SetActive(false);
             border4.SetActive(true);
-            border5.SetActive(false);    
+            border5.SetActive(false);
         }
-        else if (GameManager.Instance.GameState == GameState.DwarfTurn) {
-            turnInfo.GetComponentInChildren<Text>().text = "Dwarf";     
+        else if (GameManager.Instance.GameState == GameState.DwarfTurn)
+        {
+            turnInfo.GetComponentInChildren<Text>().text = "Dwarf";
             border1.SetActive(false);
             border2.SetActive(false);
             border3.SetActive(false);
             border4.SetActive(false);
             border5.SetActive(true);
         }
-        else {
+        else if (GameManager.Instance.GameState == GameState.EndGame)
+        {
+            turnInfo.GetComponentInChildren<Text>().text = "Game End";
+            border1.SetActive(false);
+            border2.SetActive(false);
+            border3.SetActive(false);
+            border4.SetActive(false);
+            border5.SetActive(false);
+        }
+        else
+        {
             turnInfo.GetComponentInChildren<Text>().text = "Waiting";
             border1.SetActive(false);
             border2.SetActive(false);
@@ -128,17 +146,20 @@ public class MenuManager : MonoBehaviour
             border4.SetActive(false);
             border5.SetActive(false);
         }
+        
     }
+    
 
-    //UI element to show a win or loss for battles
+    /*UI element to show a win or loss for battles
     public void ShowBattleWin() {
         loseText.gameObject.SetActive(false);
         winText.gameObject.SetActive(true);
     }
 
-        public void ShowBattleLoss() {
+    public void ShowBattleLoss() {
         winText.gameObject.SetActive(false);
         loseText.gameObject.SetActive(true);
     }
+    */
 
 }
