@@ -77,7 +77,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void SendMsg()
     {
         string message = messageInput.text;
-        if (message != "")
+        if (message != "" && message.Length <= 100)
         {
             chatClient.PublishMessage("World", message);
         }
