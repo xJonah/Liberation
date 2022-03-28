@@ -11,19 +11,22 @@ using TMPro;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
+
+    //Fields
     private ChatClient chatClient;
     [SerializeField] private string playerName;
-
     public TMP_Text messageArea;
     public TMP_InputField messageInput;
 
     #region Methods
 
+    //Get player name
     private void Awake()
     {
         playerName = PhotonNetwork.LocalPlayer.NickName;
     }
 
+    //Connect to chat room
     void Start()
     {
         chatClient = new ChatClient(this)
@@ -35,6 +38,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     }
 
+    //Connect using Photon Settings
     public void GetConnected()
     {
         Debug.Log("Connecting");
@@ -46,14 +50,18 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     void Update()
     {
+
+        //Message listener
         if (chatClient != null) 
         {
             chatClient.Service();
         }
 
+        //Can press Enter to send a message
         if (Input.GetKeyUp(KeyCode.Return)) { SendMsg(); }
     }
 
+    //On connected join world chat
     public void OnConnected()
     {
         Debug.Log("Connected");
@@ -66,6 +74,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         Debug.Log("Disconnecting");
     }
 
+    //Receive messages and format them
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
         for (int i = 0; i < senders.Length; i++)
@@ -74,6 +83,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
+    //Send message to world Chat
     public void SendMsg()
     {
         string message = messageInput.text;

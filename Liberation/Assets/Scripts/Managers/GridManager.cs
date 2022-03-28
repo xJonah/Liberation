@@ -8,12 +8,17 @@ using System.Linq;
 
 public class GridManager : MonoBehaviour 
 {
+
+    //Fields
     public int width, height;
     public Tile grassTile, desertTile, mountainTile, oceanTile, snowTile;
     public Transform cam;
     public static GridManager Instance;
     private Dictionary<Vector2, Tile> tiles;
+    private List<Tile> tileList;
 
+
+    //GridManager instance
     void Awake() {
         Instance = this;
     }
@@ -22,6 +27,7 @@ public class GridManager : MonoBehaviour
 
         // Initialise Tile Dictionary
         tiles = new Dictionary<Vector2, Tile>();
+        tileList = new List<Tile>();
 
         // Grass tile spawn (Top left)
         for (int x = 0; x < width / 2; x++) {
@@ -30,6 +36,7 @@ public class GridManager : MonoBehaviour
                 spawnedGrassTiles.name = $"GrassTile {x} {y}";
                 spawnedGrassTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedGrassTiles;
+                tileList.Add(spawnedGrassTiles);
              }
         }
 
@@ -39,6 +46,7 @@ public class GridManager : MonoBehaviour
                 spawnedGrassTiles.name = $"GrassTile {x} {y}";
                 spawnedGrassTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedGrassTiles;
+                tileList.Add(spawnedGrassTiles);
             }
         }
 
@@ -49,7 +57,8 @@ public class GridManager : MonoBehaviour
                 spawnedDesertTiles.name = $"DesertTile {x} {y}";
                 spawnedDesertTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedDesertTiles;
-             }
+                tileList.Add(spawnedDesertTiles);
+            }
         }
 
         for (int x = 8; x < width; x++) {
@@ -58,7 +67,8 @@ public class GridManager : MonoBehaviour
                 spawnedDesertTiles.name = $"DesertTile {x} {y}";
                 spawnedDesertTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedDesertTiles;
-             }
+                tileList.Add(spawnedDesertTiles);
+            }
         }
 
         // Mountain tile spawn (Bottom left)
@@ -68,7 +78,8 @@ public class GridManager : MonoBehaviour
                 spawnedMountainTiles.name = $"MountainTile {x} {y}";
                 spawnedMountainTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedMountainTiles;
-             }
+                tileList.Add(spawnedMountainTiles);
+            }
         }
 
         for (int x = 0; x < 4; x++) {
@@ -77,7 +88,8 @@ public class GridManager : MonoBehaviour
                 spawnedMountainTiles.name = $"MountainTile {x} {y}";
                 spawnedMountainTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedMountainTiles;
-             }
+                tileList.Add(spawnedMountainTiles);
+            }
         }        
 
         // Ocean tile spawn (Bottom right)
@@ -87,7 +99,9 @@ public class GridManager : MonoBehaviour
                 spawnedOceanTiles.name = $"OceanTile {x} {y}";
                 spawnedOceanTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedOceanTiles;
-             }
+                tileList.Add(spawnedOceanTiles);
+
+            }
         }
 
         for (int x = 8; x < width; x++) {
@@ -96,7 +110,8 @@ public class GridManager : MonoBehaviour
                 spawnedOceanTiles.name = $"OceanTile {x} {y}";
                 spawnedOceanTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedOceanTiles;
-             }
+                tileList.Add(spawnedOceanTiles);
+            }
         }
 
         // Snow tile spawn (Middle)
@@ -106,7 +121,8 @@ public class GridManager : MonoBehaviour
                 spawnedSnowTiles.name = $"SnowTile {x} {y}";
                 spawnedSnowTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedSnowTiles;
-             }
+                tileList.Add(spawnedSnowTiles);
+            }
         }
 
         //Camera setup
@@ -124,6 +140,22 @@ public class GridManager : MonoBehaviour
     //Function to retrieve dictionary of all tiles
     public Dictionary<Vector2, Tile> GetTiles() {
         return tiles;
+    }
+
+    public Vector2 GetTileVector(Tile tile)
+    {
+        var value = tiles.FirstOrDefault(x => x.Value == tile).Key;
+        return value;
+    }
+
+    public List<Tile> GetTileList()
+    {
+        return tileList;
+    }
+
+    public Tile GetTileValue(Vector2 key)
+    {
+        return tiles[key];
     }
 
     //Function to retrieve the vectors of surrounding tiles in an arraylist

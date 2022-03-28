@@ -7,18 +7,19 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviourPunCallbacks, IPunObservable, IOnEventCallback
+public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     #region Instances/Constants 
     
+    //Fields
     public static GameManager Instance;
-    public GameState GameState, myTurn, winner;
-    public const int EVENT_MOVE = 1;
+    public GameState GameState;
     private int humanCount, orcCount, elfCount, demonCount, dwarfCount = 0;
     private string name1, name2, name3, name4, name5;
     private Player player1, player2, player3, player4, player5;
+    public BaseUnit unit;
 
-    
+    //GameManager Instance
     void Awake()
     {
         Instance = this;
@@ -26,71 +27,22 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable, IOnEventCa
 
     #endregion
 
-    #region Turns
+    #region Start
 
-    // Start first GameState + Turns
     void Start()
     {
+        // Start first GameState
         ChangeState(GameState.GenerateGrid);
 
-        if (PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.LocalPlayer == GetOpponents(1))
-            {
-                myTurn = GameState.HumanTurn;
-            }
-            else if (PhotonNetwork.LocalPlayer == GetOpponents(2))
-            {
-                myTurn = GameState.OrcTurn;
-            }
-            else if (PhotonNetwork.LocalPlayer == GetOpponents(3))
-            {
-                myTurn = GameState.ElfTurn;
-            }
-            else if (PhotonNetwork.LocalPlayer == GetOpponents(4))
-            {
-                myTurn = GameState.DemonTurn;
-            }
-            else if (PhotonNetwork.LocalPlayer == GetOpponents(5))
-            {
-                myTurn = GameState.DwarfTurn;
-            }
-        }
     }
 
-    public bool IsMyTurn()
-    {
-        if (PhotonNetwork.LocalPlayer == GetOpponents(1) && myTurn == GameState.HumanTurn)
-        {
-            return true;
-        } 
-        else if (PhotonNetwork.LocalPlayer == GetOpponents(2) && myTurn == GameState.OrcTurn)
-        {
-            return true;
-        }
-        else if (PhotonNetwork.LocalPlayer == GetOpponents(3) && myTurn == GameState.ElfTurn)
-        {
-            return true;
-        }
-        else if (PhotonNetwork.LocalPlayer == GetOpponents(4) && myTurn == GameState.DemonTurn)
-        {
-            return true;
-        }
-        else if (PhotonNetwork.LocalPlayer == GetOpponents(5) && myTurn == GameState.DwarfTurn)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+
 
     #endregion
 
     #region GameState
 
-    // Game state logic and switch function
+    // Function to change game state
     public void ChangeState(GameState newState)
     {
         GameState = newState;
@@ -130,43 +82,62 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable, IOnEventCa
         }
     }
 
-    #endregion
-
-    #region PhotonEvents/Synchronisation
-
-    
-    public void OnEvent(EventData photonEvent) {
-        if (photonView.IsMine)
+    public GameState GetTurnStateByInteger(int state)
+    {
+        if (state == 1)
         {
-            switch (photonEvent.Code)
-            {
-                case EVENT_MOVE:
-                object[] data = (object[]) photonEvent.CustomData;
-                
-                
-                break;
-            }
+            return GameState.HumanTurn;
+        }
+        else if (state == 1)
+        {
+            return GameState.OrcTurn;
+        }
+        else if (state == 1)
+        {
+            return GameState.ElfTurn;
+        }
+        else if (state == 1)
+        {
+            return GameState.DemonTurn;
+        }
+        else if (state == 1)
+        {
+            return GameState.DwarfTurn;
+        }
+        else
+        {
+            return GameState.EndGame;
         }
     }
 
+    #endregion
+
+    #region GameState Synchronisation
+
+
+
+    //Sync Gamestate
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
         if (stream.IsWriting) {
             stream.SendNext(this.GameState);
+                    
         }
         else
         {
             this.GameState = (GameState)stream.ReceiveNext();
-            ChangeState(this.GameState);
+            ChangeState(this.GameState);            
+                                 
         }
     }
-    
-    
+
+
 
     #endregion
 
+
     #region Winner
 
-    //Determine Winner
+    //Determine Winner through how many tiles a faction owns. Return string being the nickname of the winner.
     public string DetermineWinner() {
 
         if (PhotonNetwork.CurrentRoom == null)
@@ -224,55 +195,68 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable, IOnEventCa
     }
     #endregion
 
-    #region GetOpponents
+    #region GetPlayers
 
-    public Player GetOpponents(int player)
+    //Find opponents from array
+    public Player GetPlayers(int player)
     {
-        ArrayList opponents = new ArrayList();
 
-        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        if (PhotonNetwork.IsConnected)
         {
-            opponents.Add(p);
-        }
+            ArrayList players = new ArrayList();
 
-        if (player == 1)
-        {
-            player1 = (Player)opponents[0];
-            return player1;
-        }
-        else if (player == 2)
-        {
-            player2 = (Player)opponents[1];
-            return player2;
-        }
-        else if (player == 3)
-        {
-            player3 = (Player)opponents[2];
-            return player3;
-        }
-         else if (player == 4)
-        {
-            player4 = (Player)opponents[3];
-            return player4;
-        }
-         else if (player == 5)
-        {
-            player5 = (Player)opponents[4];
-            return player5;
+
+            foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+            {
+                players.Add(p);
+            }
+
+            if (player == 1)
+            {
+                player1 = (Player)players[0];
+                return player1;
+            }
+            else if (player == 2)
+            {
+                player2 = (Player)players[1];
+                return player2;
+            }
+            else if (player == 3)
+            {
+                player3 = (Player)players[2];
+                return player3;
+            }
+            else if (player == 4)
+            {
+                player4 = (Player)players[3];
+                return player4;
+            }
+            else if (player == 5)
+            {
+                player5 = (Player)players[4];
+                return player5;
+            }
+            else
+            {
+                Debug.Log("Invalid Opponent Index");
+                return null;
+            }
         }
         else
         {
-            Debug.Log("Invalid Opponent Index");
             return null;
         }
+        
     }
+
+    
 
     #endregion
 
+ 
 }
 
-
-// 'Flow' of game
+#region GameState Enum
 public enum GameState
 {
     GenerateGrid,
@@ -285,6 +269,8 @@ public enum GameState
     EndGame
 
 }
+
+#endregion
 
 
 

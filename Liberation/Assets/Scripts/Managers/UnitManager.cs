@@ -4,18 +4,22 @@ using UnityEngine;
 using System.Linq;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Photon.Realtime;
 
-public class UnitManager : MonoBehaviour
+public class UnitManager : MonoBehaviourPunCallbacks
 {
     public static UnitManager Instance;
     private List<ScriptableUnit> units;
-    private int width, height, tileArea;
+    private int tileArea;
     public BaseHuman SelectedHuman;
     public BaseOrc SelectedOrc;
     public BaseElf SelectedElf;
     public BaseDwarf SelectedDwarf;
     public BaseDemon SelectedDemon;
     public BaseUnit SelectedUnit;
+    public const byte TILE_INFO = 4;
+    private int spawnCount;
+    private List<Tile> tileList;
 
     // Load content of Units folder inside Resources folder + hashtable setup
     void Awake() {
@@ -31,8 +35,6 @@ public class UnitManager : MonoBehaviour
     // Spawn units evenly on grid between the number of clans
     public void SpawnUnits() {
 
-        int spawnCount;
-
         if (PhotonNetwork.CurrentRoom == null)
         {
             Debug.Log("Offline");
@@ -43,55 +45,73 @@ public class UnitManager : MonoBehaviour
             spawnCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
         }
 
-        /*
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 4) {
-                SpawnHumans(spawnCount);
-                SpawnOrcs(spawnCount);
-                SpawnDwarves(spawnCount);
-                SpawnElves(spawnCount);
-            } else if (PhotonNetwork.CurrentRoom.PlayerCount == 5) { */
-                SpawnHumans(spawnCount);
-                SpawnOrcs(spawnCount);
-                //SpawnDwarves(spawnCount);
-                //SpawnElves(spawnCount);
-                //SpawnDemons(spawnCount);
-            //}
-        
+        SpawnHumans();
+        SpawnOrcs();
+
+        /*  For a 4 or 5 player match
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
+        {
+
+            SpawnHumans(spawnCount);
+            SpawnOrcs(spawnCount);
+            SpawnDwarves(spawnCount);
+            SpawnElves(spawnCount);
+
+        }
+        else if (PhotonNetwork.CurrentRoom.PlayerCount == 5)
+        {
+            SpawnHumans(spawnCount);
+            SpawnOrcs(spawnCount);
+            SpawnDwarves(spawnCount);
+            SpawnElves(spawnCount);
+            SpawnDemons(spawnCount);
+        }
+
+        */
+
+
         GameManager.Instance.ChangeState(GameState.HumanTurn);
         
     }
-
     // Function to spawn human units
-    public void SpawnHumans(int spawnCount) {
-        for(int i = 0; i < spawnCount; i++) {
-          
-            var randomHumanSpawnTile = GridManager.Instance.GetSpawnTile();
+    public void SpawnHumans() 
+    {
+        tileList = GridManager.Instance.GetTileList();
+
+
+        for (int t = 0; t < tileList.Count; t += 2)
+        {
+            var tileToSpawn = tileList[t];
             var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
-            var spawnedHuman = PhotonNetwork.Instantiate(randomHumanPrefab.name, new Vector2(0,0), Quaternion.identity);
+            var spawnedHuman = PhotonNetwork.Instantiate(randomHumanPrefab.name, new Vector2(0, 0), Quaternion.identity);
             var spawnedHumanUnit = spawnedHuman.GetComponent<BaseHuman>();
+            tileToSpawn.SetUnit(spawnedHumanUnit);
+        }
             
-            randomHumanSpawnTile.SetUnit(spawnedHumanUnit); 
-
-            //Task - Spawn counter to each unit/tile
-
-        }
+        
     }
 
     // Function to spawn orc units
-    public void SpawnOrcs(int spawnCount) {
-        for(int i = 0; i < spawnCount; i++) {
+    public void SpawnOrcs()
+    {
+        tileList = GridManager.Instance.GetTileList();
 
-            var randomOrcSpawnTile = GridManager.Instance.GetSpawnTile();
+            for (int t = 1; t < tileList.Count; t += 2)
+            {
+            var tileToSpawn = tileList[t];          
             var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
-            var spawnedOrc = PhotonNetwork.Instantiate(randomOrcPrefab.name, new Vector2(0,0), Quaternion.identity);
+            var spawnedOrc = PhotonNetwork.Instantiate(randomOrcPrefab.name, new Vector2(0, 0), Quaternion.identity);
             var spawnedOrcUnit = spawnedOrc.GetComponent<BaseOrc>();
-            randomOrcSpawnTile.SetUnit(spawnedOrcUnit); 
+            tileToSpawn.SetUnit(spawnedOrcUnit);
+            
         }
     }
 
-    // Function to spawn orc units
+    // Function to spawn Elf units
     public void SpawnElves(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
+
 
             var randomElfSpawnTile = GridManager.Instance.GetSpawnTile();
             var randomElfPrefab = GetRandomUnit<BaseElf>(Faction.Elf);
@@ -101,7 +121,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    // Function to spawn orc units
+    // Function to spawn Dwarf units
     public void SpawnDwarves(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
 
@@ -113,7 +133,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    // Function to spawn orc units
+    // Function to spawn Demon units
     public void SpawnDemons(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
 
@@ -129,7 +149,6 @@ public class UnitManager : MonoBehaviour
         var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
         var spawnedHuman = PhotonNetwork.Instantiate(randomHumanPrefab.name, new Vector2(0,0), Quaternion.identity);
         var spawnedHumanUnit = spawnedHuman.GetComponent<BaseHuman>();
-
         tile.SetUnit(spawnedHumanUnit);
     }
 
@@ -137,7 +156,6 @@ public class UnitManager : MonoBehaviour
         var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
         var spawnedOrc = PhotonNetwork.Instantiate(randomOrcPrefab.name, new Vector2(0,0), Quaternion.identity);
         var spawnedOrcUnit = spawnedOrc.GetComponent<BaseOrc>();
-
         tile.SetUnit(spawnedOrcUnit);
     }
 
@@ -145,7 +163,6 @@ public class UnitManager : MonoBehaviour
         var randomElfPrefab = GetRandomUnit<BaseElf>(Faction.Elf);
         var spawnedElf = PhotonNetwork.Instantiate(randomElfPrefab.name, new Vector2(0,0), Quaternion.identity);
         var spawnedElfUnit = spawnedElf.GetComponent<BaseElf>();
-
         tile.SetUnit(spawnedElfUnit);
     }
 
@@ -153,7 +170,6 @@ public class UnitManager : MonoBehaviour
         var randomDwarfPrefab = GetRandomUnit<BaseDwarf>(Faction.Dwarf);
         var spawnedDwarf = PhotonNetwork.Instantiate(randomDwarfPrefab.name, new Vector2(0,0), Quaternion.identity);
         var spawnedDwarfUnit = spawnedDwarf.GetComponent<BaseDwarf>();
-
         tile.SetUnit(spawnedDwarfUnit);
     }
 
@@ -161,7 +177,6 @@ public class UnitManager : MonoBehaviour
         var randomDemonPrefab = GetRandomUnit<BaseDemon>(Faction.Demon);
         var spawnedDemon = PhotonNetwork.Instantiate(randomDemonPrefab.name, new Vector2(0,0), Quaternion.identity);
         var spawnedDemonUnit = spawnedDemon.GetComponent<BaseDemon>();
-
         tile.SetUnit(spawnedDemonUnit);
     }
 

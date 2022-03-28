@@ -8,6 +8,8 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class SetTimerValue : MonoBehaviour
 {
+
+    //Fields
     private int dropdownValue;
     private float time;
 

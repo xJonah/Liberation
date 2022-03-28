@@ -6,20 +6,24 @@ using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
-
+    //Fields
     public GameObject border1, border2, border3, border4, border5;
     public GameObject turnInfo;
 
+    //Set initial text value
     private void Start()
     {
         turnInfo.GetComponentInChildren<Text>().text = "Player Turn";
     }
+
+    //Check and keep turn text and player borders updated
     private void Update()
     {
         ShowTurnInfo();
         ShowTurnBorders();
     }
 
+    //Turn text
     public void ShowTurnInfo()
     {
         if (PhotonNetwork.CurrentRoom == null)
@@ -56,6 +60,7 @@ public class TurnManager : MonoBehaviour
         }
     }
 
+    //Turn green borders surrounding name
     public void ShowTurnBorders()
     {
         

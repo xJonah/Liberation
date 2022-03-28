@@ -8,6 +8,8 @@ using Photon.Realtime;
 
 public class SendToGame : MonoBehaviourPunCallbacks
 {
+
+    //Fields
     public Button startButton;
     public Button waitingButton;
     public Button cancelButton;
@@ -48,6 +50,7 @@ public class SendToGame : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsVisible = false;
     }
 
+    //Display player names in waiting room
     public void UpdatePlayerList() {
 
         playerNames.text = "";
@@ -59,25 +62,29 @@ public class SendToGame : MonoBehaviourPunCallbacks
 
     }
 
+    //Update player list on player joining the room
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
         UpdatePlayerList();
     }
 
+    //Update player list on player joining the room
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
         UpdatePlayerList();
     }
 
+    //Update player list on player leaving the room
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
         UpdatePlayerList();
     }
 
-        public override void OnPlayerLeftRoom(Player otherPlayer)
+    //Update player list on player leaving the room
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
         UpdatePlayerList();

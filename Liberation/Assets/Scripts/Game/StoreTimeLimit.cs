@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StoreTimeLimit : MonoBehaviour
 {
+
+    //Field
     public static int timeLimit;
 
     // Store value depending on time limit chosen by user. This is used for the game countdown timer.

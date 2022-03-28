@@ -5,23 +5,43 @@ using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
- 
-public abstract class Tile : MonoBehaviour {
+using UnityEngine.Events;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
+using System;
+using Random = UnityEngine.Random;
 
+public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
+{
+    #region Fields
+    //Fields
     [SerializeField] protected SpriteRenderer _renderer;
-
     public GameObject _highlight;
     public BaseUnit OccupiedUnit;
     public string tileName;
+    public UnityEvent<Tile> Clicked;
+    public const byte BATTLE_WIN = 1, BATTLE_LOST = 2, CHANGE_STATE = 3;
     public bool Empty => OccupiedUnit == null;
-    private Dictionary<Vector2, Tile> tiles;
+    Dictionary<Vector2, Tile> tiles;
+    ArrayList tileVectors;
+    public GameState myTurn;
 
+    #endregion 
 
-    // Allow override in order for Tiles to have checkerboard pattern or not
-    public virtual void Init(int x, int y) {
-        
+    private void Start()
+    {
+        tiles = GridManager.Instance.GetTiles();
+        tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+        myTurn = FindMyTurn();
     }
- 
+
+    #region Highlight Functions/Tile Colours
+    // Allow override in order for Tiles to have checkerboard pattern or not
+    public virtual void Init(int x, int y)
+    {
+
+    }
+
     // Highlight Function when mouse hover over tile
     void OnMouseEnter() {
         _highlight.SetActive(true);
@@ -35,7 +55,19 @@ public abstract class Tile : MonoBehaviour {
         MenuManager.Instance.ShowTileInfo(null);
     }
 
+    //Surrounding tiles no longer highlighted
+    void OnMouseUp()
+    {
+        foreach (Vector2 v in tileVectors)
+        {
+            var tile = tiles[v];
+            tile._highlight.SetActive(false);
+        }
+    }
 
+    #endregion
+
+    #region SetUnit Functionality
     // Grid square is occupied when a unit is on it
     public void SetUnit(BaseUnit unit) { //Task - Assign counter to each unit/tile as well
 
@@ -48,186 +80,345 @@ public abstract class Tile : MonoBehaviour {
             OccupiedUnit = unit;
             unit.OccupiedTile = this;
         }
-        else {
+         else
+        {
+            //Remote players set positions
             OccupiedUnit = unit;
             unit.OccupiedTile = this;
         }
+        
+    }
+    #endregion
+
+    #region OnEvent
+
+
+    //Master client can make move for other players
+
+    private new void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
-    /* Surrounding tiles no longer highlighted
-    void OnMouseUp() {
-        ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+    private new void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+    public void OnEvent(EventData photonEvent)
+    {
 
-        foreach (Vector2 v in tileVectors) {
-            var tile = tiles[v];
-            tile._highlight.SetActive(false);
+        switch (photonEvent.Code)
+        {
+            case BATTLE_WIN:
+                    
+                object[] winData = (object[])photonEvent.CustomData;
+                    
+                //Get enemy + Destroy
+                Vector2 enemyPosition1 = (Vector2)winData[0];
+                Tile enemyTile1 = GridManager.Instance.GetTileValue(enemyPosition1);
+                BaseUnit enemy1 = enemyTile1.OccupiedUnit;
+                PhotonNetwork.Destroy(enemy1.gameObject);
+
+                //Spawn my unit on enemy tile
+                Vector2 selectedUnitPosition1 = (Vector2)winData[0];
+                Tile selectedUnitTile1 = GridManager.Instance.GetTileValue(selectedUnitPosition1);
+                BaseUnit selectedUnit1 = selectedUnitTile1.OccupiedUnit;
+                UnitToSpawn(selectedUnit1, enemyTile1);
+                    
+                break;
+
+            case BATTLE_LOST:
+
+                object[] loseData = (object[])photonEvent.CustomData;
+
+                //Get my unit + Destroy
+                Vector2 selectedUnitPosition2 = (Vector2)loseData[0];
+                Tile selectedUnitTile2 = GridManager.Instance.GetTileValue(selectedUnitPosition2);
+                BaseUnit selectedUnit2 = selectedUnitTile2.OccupiedUnit;
+                PhotonNetwork.Destroy(selectedUnit2.gameObject);
+
+                //Spawn enemy on my unit's tile
+                Vector2 enemyPosition2 = (Vector2)loseData[1];
+                Tile enemyTile2 = GridManager.Instance.GetTileValue(enemyPosition2);
+                BaseUnit enemy2 = enemyTile2.OccupiedUnit;
+                UnitToSpawn(enemy2, selectedUnitTile2);
+
+                break;
+
+            case CHANGE_STATE:
+
+                int[] stateData = (int[])photonEvent.CustomData;
+                int stateID = (int)stateData[0];
+                GameState turn = GameManager.Instance.GetTurnStateByInteger(stateID);
+                GameManager.Instance.ChangeState(turn);
+                    
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(photonEvent.Code), photonEvent.Code, null);
+
+            
         }
-    } 
-    */
+    }
 
-    //On mouse down surrouding tiles are highlighted
-    void OnMouseDown() {
-        tiles = new Dictionary<Vector2, Tile>();
-        tiles = GridManager.Instance.GetTiles();
-        ArrayList tileVectors = GridManager.Instance.GetSurroundingTiles(this);
+    #endregion
 
+    #region Main Functionality
+    
+    private void OnMouseDown()
+    {
+        //Store each player's unique turn linked to GameState
+
+        //Game has ended
         if (GameManager.Instance.GameState == GameState.EndGame)
         {
-            //Game has ended
+            Debug.Log("Game has ended");
             return;
         }
-        
-        else if (PhotonNetwork.IsConnected && !GameManager.Instance.IsMyTurn())
+        //Not my turn
+        else if (myTurn != GameManager.Instance.GameState)
         {
-            //Not my turn
+            MenuManager.Instance.ShowNotYourTurnText();
             return;
         }
 
+        #region Human Turn
+
         //HUMAN TURN
-        if (GameManager.Instance.GameState == GameState.HumanTurn) {
-            if (OccupiedUnit != null) {
-                if (OccupiedUnit.Faction == Faction.Human) {
+        if (GameManager.Instance.GameState == GameState.HumanTurn && myTurn == GameState.HumanTurn)
+        {
+
+            if (OccupiedUnit != null)
+            {
+                if (OccupiedUnit.Faction == Faction.Human)
+                {
+                    //Set selected Human
                     UnitManager.Instance.SetSelectedHuman((BaseHuman)OccupiedUnit);
-                    foreach (Vector2 v in tileVectors) {
+
+                    //Highlight surrounding enemy tiles
+                    foreach (Vector2 v in tileVectors)
+                    {
                         var tile = tiles[v];
-                        if (tile.OccupiedUnit.Faction != Faction.Human) {
+                        if (tile.OccupiedUnit.Faction != Faction.Human)
+                        {
                             tile._highlight.SetActive(true);
                         }
                     }
-                } 
-                else {
-                    if(UnitManager.Instance.SelectedHuman != null) {
-                        foreach (Vector2 v in tileVectors) {
-                            var tile = tiles[v];
-                            tile._highlight.SetActive(false);
-                        }
+                }
 
+                else
+                {
+                    if (UnitManager.Instance.SelectedHuman != null)
+                    {
+                        //Select enemy
                         var enemy = OccupiedUnit;
                         var result1 = DiceBattle();
-                        if (result1) {
-                            PhotonNetwork.Destroy(enemy.gameObject);
-                            UnitManager.Instance.SpawnNewHuman(enemy.OccupiedTile);
-                            //MenuManager.Instance.ShowBattleWin();
-                            UnitManager.Instance.SetSelectedHuman(null);
-                            GameManager.Instance.ChangeState(GameState.OrcTurn);
-                        } else if (!result1) {
-                            //MenuManager.Instance.ShowBattleLoss();
-                            UnitManager.Instance.SetSelectedHuman(null);
-                            GameManager.Instance.ChangeState(GameState.OrcTurn);
+
+                        //Dice win
+                        if (result1)
+                        {
+                            MenuManager.Instance.ShowWinText();
+
+                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                            {
+                                PhotonNetwork.Destroy(enemy.gameObject);
+                                UnitManager.Instance.SpawnNewHuman(enemy.OccupiedTile);
+                                UnitManager.Instance.SetSelectedHuman(null);
+                                GameManager.Instance.ChangeState(GameState.OrcTurn);
+                            }
+                            else
+                            {
+                                //Event sends tile vector positions of selected unit and enemy
+                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(enemy.OccupiedTile), GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedHuman.OccupiedTile) };
+
+                                PhotonNetwork.RaiseEvent(
+                                    BATTLE_WIN,
+                                    battleContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+
+                                UnitManager.Instance.SetSelectedHuman(null);
+
+                                int[] stateContent = new int[] { 2 };
+
+                                //Event to change state
+
+                                PhotonNetwork.RaiseEvent(
+                                    CHANGE_STATE,
+                                    stateContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+                            }
+                        }
+                        //Dice lost
+                        else if (!result1)
+                        {
+                            MenuManager.Instance.ShowLoseText();
+
+                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                            {
+                                PhotonNetwork.Destroy(UnitManager.Instance.SelectedHuman.gameObject);
+                                UnitManager.Instance.SelectedHuman.OccupiedTile.UnitToSpawn(UnitManager.Instance.SelectedHuman, enemy.OccupiedTile);
+                                UnitManager.Instance.SetSelectedHuman(null);
+                                GameManager.Instance.ChangeState(GameState.OrcTurn);
+
+                            }
+                            else
+                            {
+                                //Event sends tile vector positions of selected unit and enemy
+                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedHuman.OccupiedTile), GridManager.Instance.GetTileVector(enemy.OccupiedTile) };
+
+                                PhotonNetwork.RaiseEvent(
+                                    BATTLE_LOST,
+                                    battleContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+
+                                UnitManager.Instance.SetSelectedHuman(null);
+
+                                int[] stateContent = new int[] { 2 };
+
+                                //Event to change state
+
+                                PhotonNetwork.RaiseEvent(
+                                    CHANGE_STATE,
+                                    stateContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+                            }
                         }
                     }
                 }
             }
         }
+        #endregion 
 
-        //ORC TURN
-        else if (GameManager.Instance.GameState == GameState.OrcTurn) {
-            if (OccupiedUnit != null) {
-                if (OccupiedUnit.Faction == Faction.Orc) {
+        #region OrcTurn
+
+        if (GameManager.Instance.GameState == GameState.OrcTurn && myTurn == GameState.OrcTurn)
+        {
+
+            if (OccupiedUnit != null)
+            {
+                if (OccupiedUnit.Faction == Faction.Orc)
+                {
+                    //Set selected Orc
                     UnitManager.Instance.SetSelectedOrc((BaseOrc)OccupiedUnit);
-                } 
-                else {
-                    if(UnitManager.Instance.SelectedOrc != null) {
-                        var enemy = OccupiedUnit;
-                        var result1 = DiceBattle();
-                        if (result1) {
-                            PhotonNetwork.Destroy(enemy.gameObject);   
-                            //MenuManager.Instance.ShowBattleWin();                  
-                            UnitManager.Instance.SetSelectedOrc(null);
-                            //GameManager.Instance.ChangeState(GameState.ElfTurn); 
-                            GameManager.Instance.ChangeState(GameState.HumanTurn); //For Development Process
-                        } else if (!result1) {
-                            //MenuManager.Instance.ShowBattleLoss();          
-                            UnitManager.Instance.SetSelectedOrc(null);
-                            //GameManager.Instance.ChangeState(GameState.ElfTurn);
-                            GameManager.Instance.ChangeState(GameState.HumanTurn); //For Development Process
+
+                    //Highlight surrounding enemy tiles
+                    foreach (Vector2 v in tileVectors)
+                    {
+                        var tile = tiles[v];
+                        if (tile.OccupiedUnit.Faction != Faction.Orc)
+                        {
+                            tile._highlight.SetActive(true);
                         }
                     }
                 }
-            }
-        }
-        
-        //ELF TURN
-        else if (GameManager.Instance.GameState == GameState.ElfTurn) {
-            if (OccupiedUnit != null) {
-                if (OccupiedUnit.Faction == Faction.Elf) {
-                    UnitManager.Instance.SetSelectedElf((BaseElf)OccupiedUnit);
-                } 
-                else {
-                    if(UnitManager.Instance.SelectedElf != null) {
+                else
+                {
+                    if (UnitManager.Instance.SelectedOrc != null)
+                    {
                         var enemy = OccupiedUnit;
                         var result1 = DiceBattle();
-                        if (result1) {
-                            PhotonNetwork.Destroy(enemy.gameObject);   
-                            //MenuManager.Instance.ShowBattleWin();                  
-                            UnitManager.Instance.SetSelectedElf(null);
-                            GameManager.Instance.ChangeState(GameState.DwarfTurn);
-                        } else if (!result1) {
-                            PhotonNetwork.Destroy(UnitManager.Instance.SelectedElf.gameObject); 
-                            //MenuManager.Instance.ShowBattleLoss();          
-                            UnitManager.Instance.SetSelectedElf(null);
-                            GameManager.Instance.ChangeState(GameState.DwarfTurn);
+
+                        //Dice win
+                        if (result1)
+                        {
+
+                            MenuManager.Instance.ShowWinText();
+
+                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                            {
+                                PhotonNetwork.Destroy(enemy.gameObject);
+                                UnitManager.Instance.SpawnNewOrc(enemy.OccupiedTile);
+                                UnitManager.Instance.SetSelectedOrc(null);
+                                GameManager.Instance.ChangeState(GameState.HumanTurn);
+                            }
+                            else
+                            {
+                                //Event sends tile vector positions of selected unit and enemy
+                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(enemy.OccupiedTile), GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedOrc.OccupiedTile) };
+
+                                PhotonNetwork.RaiseEvent(
+                                    BATTLE_WIN,
+                                    battleContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+
+                                UnitManager.Instance.SetSelectedOrc(null);
+
+                                int[] stateContent = new int[] { 1 };
+
+                                //Event to change state
+                                PhotonNetwork.RaiseEvent(
+                                    CHANGE_STATE,
+                                    stateContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+                            }
                         }
-                    }
-                }
-            }
-        }
+                        //Dice loss
+                        else if (!result1)
+                        {
+                            MenuManager.Instance.ShowLoseText();
 
-        //DWARF TURN
-        else if (GameManager.Instance.GameState == GameState.DwarfTurn) {
-            if (OccupiedUnit != null) {
-                if (OccupiedUnit.Faction == Faction.Dwarf) {
-                    UnitManager.Instance.SetSelectedDwarf((BaseDwarf)OccupiedUnit);
-                } 
-                else {
-                    if(UnitManager.Instance.SelectedDwarf != null) {
-                        var enemy = OccupiedUnit;
-                        var result1 = DiceBattle();
-                        if (result1) {
-                            PhotonNetwork.Destroy(enemy.gameObject);   
-                           // MenuManager.Instance.ShowBattleWin();                  
-                            UnitManager.Instance.SetSelectedDwarf(null);
-                            GameManager.Instance.ChangeState(GameState.DemonTurn);
-                        } else if (!result1) {
-                            PhotonNetwork.Destroy(UnitManager.Instance.SelectedDwarf.gameObject); 
-                           // MenuManager.Instance.ShowBattleLoss();          
-                            UnitManager.Instance.SetSelectedDwarf(null);
-                            GameManager.Instance.ChangeState(GameState.DemonTurn);
-                        }
+                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                            {
+                                PhotonNetwork.Destroy(UnitManager.Instance.SelectedOrc.gameObject);
+                                UnitManager.Instance.SelectedHuman.OccupiedTile.UnitToSpawn(UnitManager.Instance.SelectedOrc, enemy.OccupiedTile);
+                                UnitManager.Instance.SetSelectedOrc(null);
+                                GameManager.Instance.ChangeState(GameState.HumanTurn);
 
-                    }
-                }
-            }
-        }
+                            }
+                            else
+                            {
+                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedOrc.OccupiedTile), GridManager.Instance.GetTileVector(enemy.OccupiedTile) };
 
-        //DEMON TURN
-        else if (GameManager.Instance.GameState == GameState.DemonTurn) {
-            if (OccupiedUnit != null) {
-                if (OccupiedUnit.Faction == Faction.Demon) {
-                    UnitManager.Instance.SetSelectedDemon((BaseDemon)OccupiedUnit);
-                } 
-                else {
-                    if(UnitManager.Instance.SelectedDemon != null) {
-                        var enemy = OccupiedUnit;
-                        var result1 = DiceBattle();
-                        if (result1) {
-                            PhotonNetwork.Destroy(enemy.gameObject);   
-                          //  MenuManager.Instance.ShowBattleWin();                  
-                            UnitManager.Instance.SetSelectedDemon(null);
-                            GameManager.Instance.ChangeState(GameState.HumanTurn);
-                        } else if (!result1) {
-                            PhotonNetwork.Destroy(UnitManager.Instance.SelectedDemon.gameObject); 
-                           // MenuManager.Instance.ShowBattleLoss();          
-                            UnitManager.Instance.SetSelectedDemon(null);
-                            GameManager.Instance.ChangeState(GameState.HumanTurn);
+                                //Event sends tile vector positions of selected unit and enemy
+
+                                PhotonNetwork.RaiseEvent(
+                                    BATTLE_LOST,
+                                    battleContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+
+                                UnitManager.Instance.SetSelectedOrc(null);
+
+                                int[] stateContent = new int[] { 1 };
+
+                                //Event to change state 
+
+                                PhotonNetwork.RaiseEvent(
+                                    CHANGE_STATE,
+                                    stateContent,
+                                    raiseEventOptions,
+                                    SendOptions.SendReliable
+                                    );
+                            }
                         }
                     }
                 }
             }
         }
     }
+    #endregion
 
-    //Dice 2vs2 Battles
+    #endregion
+
+    #region Functionality Methods
+    //Dice Battle
     public bool DiceBattle() {
 
         bool result = false;
@@ -246,5 +437,73 @@ public abstract class Tile : MonoBehaviour {
         return result;
     }
 
+    public void UnitToSpawn(BaseUnit unit, Tile tileToSpawn)
+    {
+        if (unit.Faction == Faction.Human)
+        {
+            UnitManager.Instance.SpawnNewHuman(tileToSpawn);
+        }
+        else if (unit.Faction == Faction.Orc)
+        {
+            UnitManager.Instance.SpawnNewOrc(tileToSpawn);
+        }
+        else if (unit.Faction == Faction.Elf)
+        {
+            UnitManager.Instance.SpawnNewElf(tileToSpawn);
+        }
+        else if (unit.Faction == Faction.Demon)
+        {
+            UnitManager.Instance.SpawnNewDemon(tileToSpawn);
+        }
+        else if (unit.Faction == Faction.Dwarf)
+        {
+            UnitManager.Instance.SpawnNewDwarf(tileToSpawn);
+        }
+        else
+        {
+            Debug.Log("Invalid Faction");
+        }
+    }
+
+
+    #endregion
+
+    #region FindTurn
+
+    public GameState FindMyTurn()
+    {
+
+        if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(1))
+        {
+            myTurn = GameState.HumanTurn;
+            return myTurn;
+        }
+        else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(2))
+        {
+            myTurn = GameState.OrcTurn;
+            return myTurn;
+        }
+        else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(3))
+        {
+            myTurn = GameState.ElfTurn;
+            return myTurn;
+        }
+        else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(4))
+        {
+            myTurn = GameState.DemonTurn;
+            return myTurn;
+        }
+        else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(5))
+        {
+            myTurn = GameState.DwarfTurn;
+            return myTurn;
+        }
+        else
+        {
+            return GameState.EndGame;
+        }
+    }
+
+    #endregion
 }
 

@@ -9,6 +9,8 @@ using Photon.Realtime;
 
 public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 {
+
+    //Fields
     public InputField createInput;
     public InputField joinInput;
     public TMP_Dropdown dropdown;
@@ -17,18 +19,21 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public GameObject namePanel;
     [SerializeField] private InputField playerName;
 
-    // Create lobby using text key and time limit + key validation (CyberSecurity)
+    // Create lobby
     public void CreateRoom() {
         var input = createInput.text;
         var hasNumber = new Regex(@"[0-9]+");
         var hasMinimum6Chars = new Regex(@".{6,}");
         var timeLimitSet = dropdown.value;
 
+        //Room Options
         RoomOptions roomOptions = new RoomOptions() {
             IsOpen = true,
             MaxPlayers = (byte) 5,
             PublishUserId = true
         };
+
+        //key validation(CyberSecurity)
 
         if (!hasMinimum6Chars.IsMatch(input)) {
             validationText.gameObject.SetActive(true);
@@ -47,6 +52,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         }
     }
 
+    //Choose nickname for players to see
     public void ChooseName() {
 
         if (playerName.text != "") {

@@ -9,17 +9,17 @@ using Photon.Realtime;
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
-    public GameObject tileInfo, tileUnit; //turnInfo;
+    public GameObject tileInfo, tileUnit; 
     public TMP_Text name1, name2, name3, name4, name5;
-    //public GameObject border1, border2, border3, border4, border5;
-    
+    public TMP_Text winText, loseText, turnText;
 
     void Awake() {
         Instance = this;
         SetUIPlayerNames();
     }
 
-    public void SetUIPlayerNames() {
+    public void SetUIPlayerNames()
+    {
 
         if (PhotonNetwork.CurrentRoom != null)
         {
@@ -31,16 +31,71 @@ public class MenuManager : MonoBehaviour
                 names.Add(p.NickName);
             }
 
-
-            name1.text = (string)names[0];
-            name2.text = (string)names[1];
-            name3.text = (string)names[2];
-            name4.text = (string)names[3];
-
-            if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+            if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(1))
             {
-                name5.gameObject.SetActive(true);
-                name5.text = (string)names[4];
+                name1.text = "You";
+                name2.text = (string)names[1];
+                name3.text = (string)names[2];
+                name4.text = (string)names[3];
+
+                if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+                {
+                    name5.gameObject.SetActive(true);
+                    name5.text = (string)names[4];
+                }
+            }
+            else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(2))
+            {
+                name1.text = (string)names[0];
+                name2.text = "You";
+                name3.text = (string)names[2];
+                name4.text = (string)names[3];
+
+                if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+                {
+                    name5.gameObject.SetActive(true);
+                    name5.text = (string)names[4];
+                }
+            }
+            else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(3))
+            {
+                name1.text = (string)names[0];
+                name2.text = (string)names[1];
+                name3.text = "You";
+                name4.text = (string)names[3];
+
+                if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+                {
+                    name5.gameObject.SetActive(true);
+                    name5.text = (string)names[4];
+                }
+            }
+            else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(4))
+            {
+                name1.text = (string)names[0];
+                name2.text = (string)names[1];
+                name3.text = (string)names[2];
+                name4.text = "You";
+
+                if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+                {
+                    name5.gameObject.SetActive(true);
+                    name5.text = (string)names[4];
+                }
+            }
+
+            else if (PhotonNetwork.LocalPlayer == GameManager.Instance.GetPlayers(4))
+            {
+                name1.text = (string)names[0];
+                name2.text = (string)names[1];
+                name3.text = (string)names[2];
+                name4.text = (string)names[3];
+
+                if (PhotonNetwork.CurrentRoom.PlayerCount > 4)
+                {
+                    name5.gameObject.SetActive(true);
+                    name5.text = "You";
+                }
             }
         }
     }
@@ -70,96 +125,24 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void Update()
+    public void ShowWinText()
     {
-        //ShowTurnInfo();
-    }
-
-
-    /*UI element stating which faction's turn it is
-    public void ShowTurnInfo() {
-
-        if (!PhotonNetwork.IsConnected)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Offline";
-        }                    
-        else if (GameManager.Instance.GameState == GameState.HumanTurn)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Human";
-            border1.SetActive(true);
-            border2.SetActive(false);
-            border3.SetActive(false);
-            border4.SetActive(false);
-            border5.SetActive(false);
-        }
-        else if (GameManager.Instance.GameState == GameState.OrcTurn)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Orc";
-            border1.SetActive(false);
-            border2.SetActive(true);
-            border3.SetActive(false);
-            border4.SetActive(false);
-            border5.SetActive(false);
-        }
-        else if (GameManager.Instance.GameState == GameState.ElfTurn)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Elf";
-            border1.SetActive(false);
-            border2.SetActive(false);
-            border3.SetActive(true);
-            border4.SetActive(false);
-            border5.SetActive(false);
-        }
-        else if (GameManager.Instance.GameState == GameState.DemonTurn)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Demon";
-            border1.SetActive(false);
-            border2.SetActive(false);
-            border3.SetActive(false);
-            border4.SetActive(true);
-            border5.SetActive(false);
-        }
-        else if (GameManager.Instance.GameState == GameState.DwarfTurn)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Dwarf";
-            border1.SetActive(false);
-            border2.SetActive(false);
-            border3.SetActive(false);
-            border4.SetActive(false);
-            border5.SetActive(true);
-        }
-        else if (GameManager.Instance.GameState == GameState.EndGame)
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Game End";
-            border1.SetActive(false);
-            border2.SetActive(false);
-            border3.SetActive(false);
-            border4.SetActive(false);
-            border5.SetActive(false);
-        }
-        else
-        {
-            turnInfo.GetComponentInChildren<Text>().text = "Waiting";
-            border1.SetActive(false);
-            border2.SetActive(false);
-            border3.SetActive(false);
-            border4.SetActive(false);
-            border5.SetActive(false);
-        }
-        
-    }
-    
-
-    /*UI element to show a win or loss for battles
-    public void ShowBattleWin() {
+        turnText.gameObject.SetActive(false);
         loseText.gameObject.SetActive(false);
         winText.gameObject.SetActive(true);
     }
 
-    public void ShowBattleLoss() {
+    public void ShowLoseText()
+    {
+        turnText.gameObject.SetActive(false);
         winText.gameObject.SetActive(false);
         loseText.gameObject.SetActive(true);
     }
-    */
 
+    public void ShowNotYourTurnText()
+    {
+        winText.gameObject.SetActive(false);
+        loseText.gameObject.SetActive(false);
+        turnText.gameObject.SetActive(true);
+    }
 }
