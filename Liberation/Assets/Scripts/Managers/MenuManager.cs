@@ -8,16 +8,20 @@ using Photon.Realtime;
 
 public class MenuManager : MonoBehaviour
 {
+
+    //Fields
     public static MenuManager Instance;
     public GameObject tileInfo, tileUnit; 
     public TMP_Text name1, name2, name3, name4, name5;
-    public TMP_Text winText, loseText, turnText;
+    public TMP_Text winText, loseText, turnText, winnerText;
 
+    //Instance + call player names function
     void Awake() {
         Instance = this;
         SetUIPlayerNames();
     }
 
+    //Show Photon nicknames in UI
     public void SetUIPlayerNames()
     {
 
@@ -125,6 +129,7 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    //Show text if last battle was won
     public void ShowWinText()
     {
         turnText.gameObject.SetActive(false);
@@ -132,6 +137,7 @@ public class MenuManager : MonoBehaviour
         winText.gameObject.SetActive(true);
     }
 
+    //Show text if last battle was lost
     public void ShowLoseText()
     {
         turnText.gameObject.SetActive(false);
@@ -139,10 +145,21 @@ public class MenuManager : MonoBehaviour
         loseText.gameObject.SetActive(true);
     }
 
+    //Show text if player tries to play when its not their turn
     public void ShowNotYourTurnText()
     {
         winText.gameObject.SetActive(false);
         loseText.gameObject.SetActive(false);
         turnText.gameObject.SetActive(true);
+    }
+
+    //Show name of the game winner
+    public void ShowWinnerText(string winner)
+    {
+        winnerText.text = winner + "has won the match!";
+        winnerText.gameObject.SetActive(true);
+        winText.gameObject.SetActive(false);
+        loseText.gameObject.SetActive(false);
+        turnText.gameObject.SetActive(false);
     }
 }

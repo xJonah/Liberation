@@ -7,9 +7,10 @@ using System.Linq;
 
 public class SettingsMenu : MonoBehaviour
 {
+
+    //Fields
     private Resolution[] resolutions;
     public TMP_Dropdown resolutionDropdown;
-
 
     // Find supported resolutions for the player's device
     void Start() {

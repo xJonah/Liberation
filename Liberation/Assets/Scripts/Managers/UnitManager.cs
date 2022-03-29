@@ -8,6 +8,8 @@ using Photon.Realtime;
 
 public class UnitManager : MonoBehaviourPunCallbacks
 {
+
+    //Fields
     public static UnitManager Instance;
     private List<ScriptableUnit> units;
     private int tileArea;
@@ -78,8 +80,6 @@ public class UnitManager : MonoBehaviourPunCallbacks
     public void SpawnHumans() 
     {
         tileList = GridManager.Instance.GetTileList();
-
-
         for (int t = 0; t < tileList.Count; t += 2)
         {
             var tileToSpawn = tileList[t];
@@ -87,32 +87,29 @@ public class UnitManager : MonoBehaviourPunCallbacks
             var spawnedHuman = PhotonNetwork.Instantiate(randomHumanPrefab.name, new Vector2(0, 0), Quaternion.identity);
             var spawnedHumanUnit = spawnedHuman.GetComponent<BaseHuman>();
             tileToSpawn.SetUnit(spawnedHumanUnit);
+
         }
             
         
     }
 
-    // Function to spawn orc units
+    //Spawn initial units
     public void SpawnOrcs()
     {
         tileList = GridManager.Instance.GetTileList();
 
-            for (int t = 1; t < tileList.Count; t += 2)
-            {
-            var tileToSpawn = tileList[t];          
+        for (int t = 1; t < tileList.Count; t += 2)
+        {
+            var tileToSpawn = tileList[t];
             var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
             var spawnedOrc = PhotonNetwork.Instantiate(randomOrcPrefab.name, new Vector2(0, 0), Quaternion.identity);
             var spawnedOrcUnit = spawnedOrc.GetComponent<BaseOrc>();
-            tileToSpawn.SetUnit(spawnedOrcUnit);
-            
+            tileToSpawn.SetUnit(spawnedOrcUnit);         
         }
     }
 
-    // Function to spawn Elf units
     public void SpawnElves(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
-
-
             var randomElfSpawnTile = GridManager.Instance.GetSpawnTile();
             var randomElfPrefab = GetRandomUnit<BaseElf>(Faction.Elf);
             var spawnedElf = PhotonNetwork.Instantiate(randomElfPrefab.name, new Vector2(0,0), Quaternion.identity);
@@ -121,10 +118,8 @@ public class UnitManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Function to spawn Dwarf units
     public void SpawnDwarves(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
-
             var randomDwarfSpawnTile = GridManager.Instance.GetSpawnTile();
             var randomDwarfPrefab = GetRandomUnit<BaseDwarf>(Faction.Dwarf);
             var spawnedDwarf = PhotonNetwork.Instantiate(randomDwarfPrefab.name, new Vector2(0,0), Quaternion.identity);
@@ -133,10 +128,8 @@ public class UnitManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Function to spawn Demon units
     public void SpawnDemons(int spawnCount) {
         for(int i = 0; i < spawnCount; i++) {
-
             var randomDemonSpawnTile = GridManager.Instance.GetSpawnTile();
             var randomDemonPrefab = GetRandomUnit<BaseDemon>(Faction.Demon);
             var spawnedDemon = PhotonNetwork.Instantiate(randomDemonPrefab.name, new Vector2(0,0), Quaternion.identity);
@@ -144,6 +137,8 @@ public class UnitManager : MonoBehaviourPunCallbacks
             randomDemonSpawnTile.SetUnit(spawnedDemonUnit); 
         }
     }
+
+    //Spawn new unit on Battle lost/win
 
     public void SpawnNewHuman(Tile tile) {
         var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
@@ -184,6 +179,8 @@ public class UnitManager : MonoBehaviourPunCallbacks
     private T GetRandomUnit<T>(Faction faction) where T : BaseUnit {
         return (T)units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First().UnitPrefab;
     }
+
+    //Hold the selected unit for players
 
     public void SetSelectedHuman(BaseHuman human) {
         SelectedHuman = human;

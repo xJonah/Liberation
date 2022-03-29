@@ -11,7 +11,6 @@ public class CountdownTimer : MonoBehaviour
 
     //Fields
     public TMP_Text timerUI;
-    private int dropdownValue;
     public float time;
     private bool startTime = false;
 
@@ -63,6 +62,7 @@ public class CountdownTimer : MonoBehaviour
             timeToDisplay += 1;
         } 
         
+        //Format string
         double minutes = Mathf.FloorToInt(timeToDisplay / 60);
         double seconds = Mathf.FloorToInt(timeToDisplay % 60);
         timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds);

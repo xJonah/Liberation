@@ -97,7 +97,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     #endregion
 
 
-    #region Interface Methods
+    #region Unused Interface Methods
     public void DebugReturn(DebugLevel level, string message)
     {
         

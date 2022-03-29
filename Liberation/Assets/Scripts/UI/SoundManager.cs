@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
+
+    //Field
     public Slider volumeSlider;
 
     // If the user does not have a saved music volume, set the volume to 1

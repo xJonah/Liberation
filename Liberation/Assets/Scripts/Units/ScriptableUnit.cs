@@ -7,11 +7,12 @@ using UnityEngine;
 
 public class ScriptableUnit : ScriptableObject
 {
+    //Traits of a scriptable unit
     public Faction Faction;
     public BaseUnit UnitPrefab;
 }
 
-// Faction List
+// Declare faction types
 public enum Faction {
     Human,
     Orc,

@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -17,7 +18,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     private int humanCount, orcCount, elfCount, demonCount, dwarfCount = 0;
     private string name1, name2, name3, name4, name5;
     private Player player1, player2, player3, player4, player5;
-    public BaseUnit unit;
 
     //GameManager Instance
     void Awake()
@@ -73,8 +73,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 break;            
 
             case GameState.EndGame:
-            string winner = DetermineWinner();
-            //Winner text
+                //Winner text
+                string winner = DetermineWinner();
+                MenuManager.Instance.ShowWinnerText(winner);
                 break; 
 
             default:
@@ -82,6 +83,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    //Calculate a gamestate by integer. Used for Raise Event
     public GameState GetTurnStateByInteger(int state)
     {
         if (state == 1)
@@ -145,11 +147,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             return " ";
         }
 
-        Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
-        tiles = GridManager.Instance.GetTiles();
-        var tileValues = tiles.Values;
 
-        foreach (Tile t in tileValues) {
+        List<Tile> tiles = GridManager.Instance.GetTileList();
+
+        foreach (Tile t in tiles) {
 
             if (t.OccupiedUnit.Faction == Faction.Human) {
                 humanCount++;
@@ -257,6 +258,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 }
 
 #region GameState Enum
+
+//Declare gamestates
 public enum GameState
 {
     GenerateGrid,

@@ -5,6 +5,7 @@ using UnityEngine;
 public class CursorController : MonoBehaviour
 {
 
+    //Fields
     public Texture2D cursor;
     public Texture2D cursorClicked;
 

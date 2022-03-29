@@ -20,8 +20,10 @@ public class SetTimerValue : MonoBehaviour
             GetRoundTime();
             CalculateRoundTime();
 
-            Hashtable hash = new Hashtable();
-            hash.Add("Time", time);
+            Hashtable hash = new Hashtable
+            {
+                { "Time", time }
+            };
             PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
         }
     }

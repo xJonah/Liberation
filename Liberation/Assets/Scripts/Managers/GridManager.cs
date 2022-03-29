@@ -23,6 +23,7 @@ public class GridManager : MonoBehaviour
         Instance = this;
     }
  
+    //Spawn map
     public void GenerateGrid() {
 
         // Initialise Tile Dictionary
@@ -142,17 +143,20 @@ public class GridManager : MonoBehaviour
         return tiles;
     }
 
+    //Return a tile's vector position
     public Vector2 GetTileVector(Tile tile)
     {
         var value = tiles.FirstOrDefault(x => x.Value == tile).Key;
         return value;
     }
 
+    //Return a list of tiles
     public List<Tile> GetTileList()
     {
         return tileList;
     }
 
+    //Return the tile in the position of a vector
     public Tile GetTileValue(Vector2 key)
     {
         return tiles[key];
@@ -167,11 +171,13 @@ public class GridManager : MonoBehaviour
         Vector2 tileUp = new Vector2(surroudingTileVector.x, surroudingTileVector.y + 1);
         Vector2 tileDown = new Vector2(surroudingTileVector.x, surroudingTileVector.y - 1);
 
-        ArrayList tileVectors = new ArrayList();
-        tileVectors.Add(tileLeft);
-        tileVectors.Add(tileRight);
-        tileVectors.Add(tileUp);
-        tileVectors.Add(tileDown);
+        ArrayList tileVectors = new ArrayList
+        {
+            tileLeft,
+            tileRight,
+            tileUp,
+            tileDown
+        };
 
         return tileVectors;
     }

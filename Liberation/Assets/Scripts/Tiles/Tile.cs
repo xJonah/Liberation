@@ -112,18 +112,19 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
             case BATTLE_WIN:
                     
                 object[] winData = (object[])photonEvent.CustomData;
-                    
-                //Get enemy + Destroy
-                Vector2 enemyPosition1 = (Vector2)winData[0];
-                Tile enemyTile1 = GridManager.Instance.GetTileValue(enemyPosition1);
-                BaseUnit enemy1 = enemyTile1.OccupiedUnit;
-                PhotonNetwork.Destroy(enemy1.gameObject);
 
-                //Spawn my unit on enemy tile
-                Vector2 selectedUnitPosition1 = (Vector2)winData[0];
-                Tile selectedUnitTile1 = GridManager.Instance.GetTileValue(selectedUnitPosition1);
-                BaseUnit selectedUnit1 = selectedUnitTile1.OccupiedUnit;
-                UnitToSpawn(selectedUnit1, enemyTile1);
+                    //Get enemy + Destroy
+                    Vector2 enemyPosition1 = (Vector2)winData[0];
+                    Tile enemyTile1 = GridManager.Instance.GetTileValue(enemyPosition1);
+                    BaseUnit enemy1 = enemyTile1.OccupiedUnit;
+                    PhotonNetwork.Destroy(enemy1.gameObject);
+
+                    //Spawn my unit on enemy tile
+                    Vector2 selectedUnitPosition1 = (Vector2)winData[1];
+                    Tile selectedUnitTile1 = GridManager.Instance.GetTileValue(selectedUnitPosition1);
+                    BaseUnit selectedUnit1 = selectedUnitTile1.OccupiedUnit;
+                    UnitToSpawn(selectedUnit1, enemyTile1);
+
                     
                 break;
 
@@ -147,11 +148,14 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
 
             case CHANGE_STATE:
 
-                int[] stateData = (int[])photonEvent.CustomData;
-                int stateID = (int)stateData[0];
-                GameState turn = GameManager.Instance.GetTurnStateByInteger(stateID);
-                GameManager.Instance.ChangeState(turn);
-                    
+                if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                {
+                    int[] stateData = (int[])photonEvent.CustomData;
+                    int stateID = (int)stateData[0];
+                    GameState turn = GameManager.Instance.GetTurnStateByInteger(stateID);
+                    GameManager.Instance.ChangeState(turn);
+                }
+
                 break;
 
             default:
@@ -167,7 +171,6 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
     
     private void OnMouseDown()
     {
-        //Store each player's unique turn linked to GameState
 
         //Game has ended
         if (GameManager.Instance.GameState == GameState.EndGame)
@@ -211,87 +214,59 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
                     if (UnitManager.Instance.SelectedHuman != null)
                     {
                         //Select enemy
+                        BaseHuman myUnit = UnitManager.Instance.SelectedHuman;
                         var enemy = OccupiedUnit;
                         var result1 = DiceBattle();
 
                         //Dice win
                         if (result1)
                         {
-                            MenuManager.Instance.ShowWinText();
+                                MenuManager.Instance.ShowWinText();
 
-                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
-                            {
+                                //Human is Master Client
                                 PhotonNetwork.Destroy(enemy.gameObject);
                                 UnitManager.Instance.SpawnNewHuman(enemy.OccupiedTile);
                                 UnitManager.Instance.SetSelectedHuman(null);
                                 GameManager.Instance.ChangeState(GameState.OrcTurn);
-                            }
-                            else
-                            {
-                                //Event sends tile vector positions of selected unit and enemy
-                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(enemy.OccupiedTile), GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedHuman.OccupiedTile) };
+
+                                //Human tells other players he won
+                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+                                var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                                var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                                
+
+                                object[] battleContent = new object[] { enemyTileVector, myUnitTileVector };
 
                                 PhotonNetwork.RaiseEvent(
                                     BATTLE_WIN,
                                     battleContent,
                                     raiseEventOptions,
                                     SendOptions.SendReliable
-                                    );
-
-                                UnitManager.Instance.SetSelectedHuman(null);
-
-                                int[] stateContent = new int[] { 2 };
-
-                                //Event to change state
-
-                                PhotonNetwork.RaiseEvent(
-                                    CHANGE_STATE,
-                                    stateContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
-                            }
+                                    );                         
                         }
                         //Dice lost
                         else if (!result1)
                         {
                             MenuManager.Instance.ShowLoseText();
 
-                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
-                            {
-                                PhotonNetwork.Destroy(UnitManager.Instance.SelectedHuman.gameObject);
-                                UnitManager.Instance.SelectedHuman.OccupiedTile.UnitToSpawn(UnitManager.Instance.SelectedHuman, enemy.OccupiedTile);
-                                UnitManager.Instance.SetSelectedHuman(null);
-                                GameManager.Instance.ChangeState(GameState.OrcTurn);
+                            //Human is master client
+                            PhotonNetwork.Destroy(myUnit.gameObject);
+                            UnitToSpawn(enemy, myUnit.OccupiedTile);
+                            UnitManager.Instance.SetSelectedHuman(null);
+                            GameManager.Instance.ChangeState(GameState.OrcTurn);
 
-                            }
-                            else
-                            {
-                                //Event sends tile vector positions of selected unit and enemy
-                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedHuman.OccupiedTile), GridManager.Instance.GetTileVector(enemy.OccupiedTile) };
+                            //Human tells other players he lost
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            object[] battleContent = new object[] { myUnitTileVector, enemyTileVector };
 
-                                PhotonNetwork.RaiseEvent(
-                                    BATTLE_LOST,
-                                    battleContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
-
-                                UnitManager.Instance.SetSelectedHuman(null);
-
-                                int[] stateContent = new int[] { 2 };
-
-                                //Event to change state
-
-                                PhotonNetwork.RaiseEvent(
-                                    CHANGE_STATE,
-                                    stateContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
-                            }
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_LOST,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
                         }
                     }
                 }
@@ -325,6 +300,8 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     if (UnitManager.Instance.SelectedOrc != null)
                     {
+                        //Select enemy
+                        var myUnit = UnitManager.Instance.SelectedOrc;
                         var enemy = OccupiedUnit;
                         var result1 = DiceBattle();
 
@@ -334,94 +311,387 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
 
                             MenuManager.Instance.ShowWinText();
 
-                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
-                            {
-                                PhotonNetwork.Destroy(enemy.gameObject);
-                                UnitManager.Instance.SpawnNewOrc(enemy.OccupiedTile);
-                                UnitManager.Instance.SetSelectedOrc(null);
-                                GameManager.Instance.ChangeState(GameState.HumanTurn);
-                            }
-                            else
-                            {
-                                //Event sends tile vector positions of selected unit and enemy
-                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(enemy.OccupiedTile), GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedOrc.OccupiedTile) };
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            object[] battleContent = new object[] { enemyTileVector, myUnitTileVector };
 
-                                PhotonNetwork.RaiseEvent(
-                                    BATTLE_WIN,
-                                    battleContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
+                            //Orc tells other players he won
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_WIN,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
 
-                                UnitManager.Instance.SetSelectedOrc(null);
+                            UnitManager.Instance.SetSelectedOrc(null);
 
-                                int[] stateContent = new int[] { 1 };
+                            int[] stateContent = new int[] { 1 };
 
-                                //Event to change state
-                                PhotonNetwork.RaiseEvent(
-                                    CHANGE_STATE,
-                                    stateContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
-                            }
+                            //Ask master client to change game state
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+                            
                         }
                         //Dice loss
                         else if (!result1)
                         {
                             MenuManager.Instance.ShowLoseText();
 
-                            if (PhotonNetwork.LocalPlayer.IsMasterClient)
-                            {
-                                PhotonNetwork.Destroy(UnitManager.Instance.SelectedOrc.gameObject);
-                                UnitManager.Instance.SelectedHuman.OccupiedTile.UnitToSpawn(UnitManager.Instance.SelectedOrc, enemy.OccupiedTile);
-                                UnitManager.Instance.SetSelectedOrc(null);
-                                GameManager.Instance.ChangeState(GameState.HumanTurn);
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            object[] battleContent = new object[] { myUnitTileVector, enemyTileVector };
 
-                            }
-                            else
-                            {
-                                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                                object[] battleContent = new object[] { GridManager.Instance.GetTileVector(UnitManager.Instance.SelectedOrc.OccupiedTile), GridManager.Instance.GetTileVector(enemy.OccupiedTile) };
+                            //Orc tells other players he lost
 
-                                //Event sends tile vector positions of selected unit and enemy
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_LOST,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
 
-                                PhotonNetwork.RaiseEvent(
-                                    BATTLE_LOST,
-                                    battleContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
+                            UnitManager.Instance.SetSelectedOrc(null);
 
-                                UnitManager.Instance.SetSelectedOrc(null);
+                            int[] stateContent = new int[] { 1 };
 
-                                int[] stateContent = new int[] { 1 };
+                            //Ask master client to change gamestate
 
-                                //Event to change state 
-
-                                PhotonNetwork.RaiseEvent(
-                                    CHANGE_STATE,
-                                    stateContent,
-                                    raiseEventOptions,
-                                    SendOptions.SendReliable
-                                    );
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
                             }
                         }
                     }
-                }
+                
             }
         }
-    }
-    #endregion
+        #endregion
 
+        #region Elf Turn
+
+        if (GameManager.Instance.GameState == GameState.ElfTurn && myTurn == GameState.ElfTurn)
+        {
+
+            if (OccupiedUnit != null)
+            {
+                if (OccupiedUnit.Faction == Faction.Elf)
+                {
+                    //Set selected Elf
+                    UnitManager.Instance.SetSelectedElf((BaseElf)OccupiedUnit);
+
+                    //Highlight surrounding enemy tiles
+                    foreach (Vector2 v in tileVectors)
+                    {
+                        var tile = tiles[v];
+                        if (tile.OccupiedUnit.Faction != Faction.Elf)
+                        {
+                            tile._highlight.SetActive(true);
+                        }
+                    }
+                }
+                else
+                {
+                    if (UnitManager.Instance.SelectedElf != null)
+                    {
+                        //Select enemy
+                        var myUnit = UnitManager.Instance.SelectedElf;
+                        var enemy = OccupiedUnit;
+                        var result1 = DiceBattle();
+
+                        //Dice win
+                        if (result1)
+                        {
+
+                            MenuManager.Instance.ShowWinText();
+
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            object[] battleContent = new object[] { enemyTileVector, myUnitTileVector };
+
+                            //Elf tells other players he won
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_WIN,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                            UnitManager.Instance.SetSelectedElf(null);
+
+                            int[] stateContent = new int[] { 1 };
+
+                            //Ask master client to change game state
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                        }
+                        //Dice loss
+                        else if (!result1)
+                        {
+                            MenuManager.Instance.ShowLoseText();
+
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            object[] battleContent = new object[] { myUnitTileVector, enemyTileVector };
+
+                            //Elf tells other players he lost
+
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_LOST,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                            UnitManager.Instance.SetSelectedElf(null);
+
+                            int[] stateContent = new int[] { 1 };
+
+                            //Ask master client to change gamestate
+
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+                        }
+                    }
+                }
+
+            }
+        }
+
+        #endregion
+
+        #region Demon Turn
+
+        if (GameManager.Instance.GameState == GameState.DemonTurn && myTurn == GameState.DemonTurn)
+        {
+
+            if (OccupiedUnit != null)
+            {
+                if (OccupiedUnit.Faction == Faction.Demon)
+                {
+                    //Set selected Demon
+                    UnitManager.Instance.SetSelectedDemon((BaseDemon)OccupiedUnit);
+
+                    //Highlight surrounding enemy tiles
+                    foreach (Vector2 v in tileVectors)
+                    {
+                        var tile = tiles[v];
+                        if (tile.OccupiedUnit.Faction != Faction.Demon)
+                        {
+                            tile._highlight.SetActive(true);
+                        }
+                    }
+                }
+                else
+                {
+                    if (UnitManager.Instance.SelectedDemon != null)
+                    {
+                        //Select enemy
+                        var myUnit = UnitManager.Instance.SelectedDemon;
+                        var enemy = OccupiedUnit;
+                        var result1 = DiceBattle();
+
+                        //Dice win
+                        if (result1)
+                        {
+
+                            MenuManager.Instance.ShowWinText();
+
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            object[] battleContent = new object[] { enemyTileVector, myUnitTileVector };
+
+                            //Demon tells other players he won
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_WIN,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                            UnitManager.Instance.SetSelectedDemon(null);
+
+                            int[] stateContent = new int[] { 1 };
+
+                            //Ask master client to change game state
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                        }
+                        //Dice loss
+                        else if (!result1)
+                        {
+                            MenuManager.Instance.ShowLoseText();
+
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            object[] battleContent = new object[] { myUnitTileVector, enemyTileVector };
+
+                            //Demon tells other players he lost
+
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_LOST,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                            UnitManager.Instance.SetSelectedDemon(null);
+
+                            int[] stateContent = new int[] { 1 };
+
+                            //Ask master client to change gamestate
+
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+                        }
+                    }
+                }
+
+            }
+        }
+
+        #endregion
+
+        #region Dwarf Turn
+
+        if (GameManager.Instance.GameState == GameState.DwarfTurn && myTurn == GameState.DwarfTurn)
+        {
+
+            if (OccupiedUnit != null)
+            {
+                if (OccupiedUnit.Faction == Faction.Dwarf)
+                {
+                    //Set selected Dwarf
+                    UnitManager.Instance.SetSelectedDwarf((BaseDwarf)OccupiedUnit);
+
+                    //Highlight surrounding enemy tiles
+                    foreach (Vector2 v in tileVectors)
+                    {
+                        var tile = tiles[v];
+                        if (tile.OccupiedUnit.Faction != Faction.Dwarf)
+                        {
+                            tile._highlight.SetActive(true);
+                        }
+                    }
+                }
+                else
+                {
+                    if (UnitManager.Instance.SelectedDwarf != null)
+                    {
+                        //Select enemy
+                        var myUnit = UnitManager.Instance.SelectedDwarf;
+                        var enemy = OccupiedUnit;
+                        var result1 = DiceBattle();
+
+                        //Dice win
+                        if (result1)
+                        {
+
+                            MenuManager.Instance.ShowWinText();
+
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            object[] battleContent = new object[] { enemyTileVector, myUnitTileVector };
+
+                            //Dwarf tells other players he won
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_WIN,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                            UnitManager.Instance.SetSelectedDwarf(null);
+
+                            int[] stateContent = new int[] { 1 };
+
+                            //Ask master client to change game state
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                        }
+                        //Dice loss
+                        else if (!result1)
+                        {
+                            MenuManager.Instance.ShowLoseText();
+
+                            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                            var myUnitTileVector = GridManager.Instance.GetTileVector(myUnit.OccupiedTile);
+                            var enemyTileVector = GridManager.Instance.GetTileVector(enemy.OccupiedTile);
+                            object[] battleContent = new object[] { myUnitTileVector, enemyTileVector };
+
+                            //Dwarf tells other players he lost
+
+                            PhotonNetwork.RaiseEvent(
+                                BATTLE_LOST,
+                                battleContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+
+                            UnitManager.Instance.SetSelectedDwarf(null);
+
+                            int[] stateContent = new int[] { 1 };
+
+                            //Ask master client to change gamestate
+
+                            PhotonNetwork.RaiseEvent(
+                                CHANGE_STATE,
+                                stateContent,
+                                raiseEventOptions,
+                                SendOptions.SendReliable
+                                );
+                        }
+                    }
+                }
+
+            }
+        }
+
+        #endregion
+    }
     #endregion
 
     #region Functionality Methods
     //Dice Battle
     public bool DiceBattle() {
 
-        bool result = false;
+        bool result;
 
         int playerDiceResult = Random.Range(1, 6);
 
