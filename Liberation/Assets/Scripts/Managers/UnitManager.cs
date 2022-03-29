@@ -47,6 +47,7 @@ public class UnitManager : MonoBehaviourPunCallbacks
             spawnCount = tileArea / PhotonNetwork.CurrentRoom.PlayerCount;
         }
 
+        //For Demo
         SpawnHumans();
         SpawnOrcs();
 
@@ -76,6 +77,8 @@ public class UnitManager : MonoBehaviourPunCallbacks
         GameManager.Instance.ChangeState(GameState.HumanTurn);
         
     }
+
+    #region Spawn initial units
     // Function to spawn human units
     public void SpawnHumans() 
     {
@@ -87,10 +90,7 @@ public class UnitManager : MonoBehaviourPunCallbacks
             var spawnedHuman = PhotonNetwork.Instantiate(randomHumanPrefab.name, new Vector2(0, 0), Quaternion.identity);
             var spawnedHumanUnit = spawnedHuman.GetComponent<BaseHuman>();
             tileToSpawn.SetUnit(spawnedHumanUnit);
-
-        }
-            
-        
+        }               
     }
 
     //Spawn initial units
@@ -98,7 +98,7 @@ public class UnitManager : MonoBehaviourPunCallbacks
     {
         tileList = GridManager.Instance.GetTileList();
 
-        for (int t = 1; t < tileList.Count; t += 2)
+        for (int t = 1; t < tileList.Count-1; t += 2)
         {
             var tileToSpawn = tileList[t];
             var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
@@ -138,6 +138,9 @@ public class UnitManager : MonoBehaviourPunCallbacks
         }
     }
 
+    #endregion
+
+    #region Spawn New Unit
     //Spawn new unit on Battle lost/win
 
     public void SpawnNewHuman(Tile tile) {
@@ -175,11 +178,14 @@ public class UnitManager : MonoBehaviourPunCallbacks
         tile.SetUnit(spawnedDemonUnit);
     }
 
+    #endregion
+
     // Grab random prefab model of a certain faction - only one prefab per faction at the moment
     private T GetRandomUnit<T>(Faction faction) where T : BaseUnit {
         return (T)units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First().UnitPrefab;
     }
 
+    #region Selected Units
     //Hold the selected unit for players
 
     public void SetSelectedHuman(BaseHuman human) {
@@ -197,5 +203,7 @@ public class UnitManager : MonoBehaviourPunCallbacks
     public void SetSelectedDemon(BaseDemon demon) {
         SelectedDemon = demon;
     }
+
+    #endregion
 
 }
