@@ -19,12 +19,12 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject _highlight;
     public BaseUnit OccupiedUnit;
     public string tileName;
-    public UnityEvent<Tile> Clicked;
     public const byte BATTLE_WIN = 1, BATTLE_LOST = 2, CHANGE_STATE = 3;
     public bool Empty => OccupiedUnit == null;
-    Dictionary<Vector2, Tile> tiles;
-    ArrayList tileVectors;
+    private Dictionary<Vector2, Tile> tiles;
+    private ArrayList tileVectors;
     public GameState myTurn;
+    private List<Tile> grassTiles, desertTiles, mountainTiles, oceanTiles, snowTiles;
 
     #endregion 
 
@@ -33,6 +33,12 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
         tiles = GridManager.Instance.GetTiles();
         tileVectors = GridManager.Instance.GetSurroundingTiles(this);
         myTurn = FindMyTurn();
+
+                grassTiles = GridManager.Instance.GetGrassTiles();
+        desertTiles = GridManager.Instance.GetDesertTiles();
+        mountainTiles = GridManager.Instance.GetMountainTiles();
+        oceanTiles = GridManager.Instance.GetOceanTiles();
+        snowTiles = GridManager.Instance.GetSnowTiles();
     }
 
     #region Highlight Functions/Tile Colours
@@ -376,6 +382,7 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         #endregion
 
+        
         #region Elf Turn
 
         if (GameManager.Instance.GameState == GameState.ElfTurn && myTurn == GameState.ElfTurn)
@@ -689,23 +696,156 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
 
     #region Functionality Methods
     //Dice Battle
-    public bool DiceBattle() {
-
+    public bool DiceBattle()
+    {
         bool result;
-
         int playerDiceResult = Random.Range(1, 6);
-
         int enemyDiceResult = Random.Range(1, 6);
 
-        if (playerDiceResult > enemyDiceResult) {
+        if (playerDiceResult > enemyDiceResult)
+        {
             result = true;
-        } 
-        else {
+        }
+        else
+        {
             result = false;
         }
 
         return result;
+
+
     }
+
+    #region Player controls Biome
+    public bool DiceBattleBiomeCheck(Vector2 myUnitPos)
+    {
+        bool result;
+        int playerDiceResult;
+        int enemyDiceResult = Random.Range(1, 6);
+        BaseUnit unitToCheck = GridManager.Instance.GetTileValue(myUnitPos).OccupiedUnit;
+
+        bool check = PlayerControlsBiome(unitToCheck);
+
+        if (check)
+        {
+            playerDiceResult = Random.Range(2, 7);
+        }
+        else
+        {
+            playerDiceResult = Random.Range(1, 6);
+        }
+
+        if (playerDiceResult > enemyDiceResult)
+        {
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+
+        return result;
+
+
+    }
+
+    public bool PlayerControlsBiome(BaseUnit myUnit)
+    {
+        int unitCount = 0;
+        bool result = false;
+
+        foreach (Tile t in grassTiles)
+        {
+            if (t.OccupiedUnit.Faction == myUnit.Faction)
+            {
+                unitCount++;
+            }
+        }
+
+        if (unitCount == grassTiles.Count)
+        {
+            result = true;
+            return result;
+        }
+        else
+        {
+            unitCount = 0;
+        }
+
+        foreach (Tile t in desertTiles)
+        {
+            if (t.OccupiedUnit.Faction == myUnit.Faction)
+            {
+                unitCount++;
+            }
+        }
+
+        if (unitCount == desertTiles.Count)
+        {
+            result = true;
+            return result;
+        }
+        else
+        {
+            unitCount = 0;
+        }
+
+        foreach (Tile t in mountainTiles)
+        {
+            if (t.OccupiedUnit.Faction == myUnit.Faction)
+            {
+                unitCount++;
+            }
+        }
+
+        if (unitCount == mountainTiles.Count)
+        {
+            result = true;
+            return result;
+        }
+        else
+        {
+            unitCount = 0;
+        }
+
+        foreach (Tile t in oceanTiles)
+        {
+            if (t.OccupiedUnit.Faction == myUnit.Faction)
+            {
+                unitCount++;
+            }
+        }
+
+        if (unitCount == oceanTiles.Count)
+        {
+            result = true;
+            return result;
+        }
+        else
+        {
+            unitCount = 0;
+        }
+
+        foreach (Tile t in snowTiles)
+        {
+            if (t.OccupiedUnit.Faction == myUnit.Faction)
+            {
+                unitCount++;
+            }
+        }
+
+        if (unitCount == snowTiles.Count)
+        {
+            result = true;
+            return result;
+        }
+
+        return result;
+
+    }
+    #endregion 
+
+    #endregion
 
     public void UnitToSpawn(BaseUnit unit, Tile tileToSpawn)
     {
@@ -736,7 +876,6 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
 
-    #endregion
 
     #region FindTurn
 

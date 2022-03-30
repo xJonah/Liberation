@@ -63,6 +63,11 @@ public class TurnManager : MonoBehaviour
     //Turn green borders surrounding name
     public void ShowTurnBorders()
     {
+
+        if (PhotonNetwork.CurrentRoom == null)
+        {
+            return;
+        }
         
         if (GameManager.Instance.GameState == GameState.HumanTurn)
         {

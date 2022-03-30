@@ -15,7 +15,7 @@ public class GridManager : MonoBehaviour
     public Transform cam;
     public static GridManager Instance;
     private Dictionary<Vector2, Tile> tiles;
-    private List<Tile> tileList;
+    private List<Tile> tileList, grassTiles, desertTiles, mountainTiles, oceanTiles, snowTiles;
 
 
     //GridManager instance
@@ -29,6 +29,11 @@ public class GridManager : MonoBehaviour
         // Initialise Tile Dictionary
         tiles = new Dictionary<Vector2, Tile>();
         tileList = new List<Tile>();
+        grassTiles = new List<Tile>(); 
+        desertTiles = new List<Tile>(); 
+        mountainTiles = new List<Tile>(); 
+        oceanTiles = new List<Tile>(); 
+        snowTiles = new List<Tile>(); 
 
         // Grass tile spawn (Top left - higher)
         for (int y = 6; y < height; y++)
@@ -39,6 +44,7 @@ public class GridManager : MonoBehaviour
                 spawnedGrassTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedGrassTiles;
                 tileList.Add(spawnedGrassTiles);
+                grassTiles.Add(spawnedGrassTiles);
              }
         }
 
@@ -52,6 +58,7 @@ public class GridManager : MonoBehaviour
                 spawnedDesertTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedDesertTiles;
                 tileList.Add(spawnedDesertTiles);
+                desertTiles.Add(spawnedDesertTiles);
             }
         }
 
@@ -66,6 +73,7 @@ public class GridManager : MonoBehaviour
                 spawnedMountainTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedMountainTiles;
                 tileList.Add(spawnedMountainTiles);
+                mountainTiles.Add(spawnedMountainTiles);
             }
         }
 
@@ -79,7 +87,7 @@ public class GridManager : MonoBehaviour
                 spawnedOceanTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedOceanTiles;
                 tileList.Add(spawnedOceanTiles);
-
+                oceanTiles.Add(spawnedOceanTiles);
             }
         }
 
@@ -93,6 +101,7 @@ public class GridManager : MonoBehaviour
                 spawnedSnowTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedSnowTiles;
                 tileList.Add(spawnedSnowTiles);
+                snowTiles.Add(spawnedSnowTiles);
             }
         }
 
@@ -107,6 +116,7 @@ public class GridManager : MonoBehaviour
                 spawnedGrassTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedGrassTiles;
                 tileList.Add(spawnedGrassTiles);
+                grassTiles.Add(spawnedGrassTiles);
             }
         }
 
@@ -119,6 +129,7 @@ public class GridManager : MonoBehaviour
                 spawnedDesertTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedDesertTiles;
                 tileList.Add(spawnedDesertTiles);
+                desertTiles.Add(spawnedDesertTiles);
             }
         }
 
@@ -132,6 +143,7 @@ public class GridManager : MonoBehaviour
                 spawnedMountainTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedMountainTiles;
                 tileList.Add(spawnedMountainTiles);
+                mountainTiles.Add(spawnedMountainTiles);
             }
         }
 
@@ -145,6 +157,7 @@ public class GridManager : MonoBehaviour
                 spawnedOceanTiles.Init(x, y);
                 tiles[new Vector2(x, y)] = spawnedOceanTiles;
                 tileList.Add(spawnedOceanTiles);
+                oceanTiles.Add(spawnedOceanTiles);
             }
         }
 
@@ -177,6 +190,31 @@ public class GridManager : MonoBehaviour
     public List<Tile> GetTileList()
     {
         return tileList;
+    }
+
+    public List<Tile> GetGrassTiles()
+    {
+        return grassTiles;
+    }
+
+    public List<Tile> GetDesertTiles()
+    {
+        return desertTiles;
+    }
+
+    public List<Tile> GetMountainTiles()
+    {
+        return mountainTiles;
+    }
+
+    public List<Tile> GetOceanTiles()
+    {
+        return oceanTiles;
+    }
+
+    public List<Tile> GetSnowTiles()
+    {
+        return snowTiles;
     }
 
     //Return the tile in the position of a vector

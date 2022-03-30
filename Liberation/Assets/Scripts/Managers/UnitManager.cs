@@ -83,7 +83,7 @@ public class UnitManager : MonoBehaviourPunCallbacks
     public void SpawnHumans() 
     {
         tileList = GridManager.Instance.GetTileList();
-        for (int t = 0; t < tileList.Count; t += 2)
+        for (int t = 0; t <= tileList.Count - 1; t += PhotonNetwork.CurrentRoom.PlayerCount)
         {
             var tileToSpawn = tileList[t];
             var randomHumanPrefab = GetRandomUnit<BaseHuman>(Faction.Human);
@@ -98,7 +98,7 @@ public class UnitManager : MonoBehaviourPunCallbacks
     {
         tileList = GridManager.Instance.GetTileList();
 
-        for (int t = 1; t < tileList.Count-1; t += 2)
+        for (int t = 1; t <= tileList.Count; t += PhotonNetwork.CurrentRoom.PlayerCount)
         {
             var tileToSpawn = tileList[t];
             var randomOrcPrefab = GetRandomUnit<BaseOrc>(Faction.Orc);
