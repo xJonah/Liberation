@@ -26,20 +26,21 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameState myTurn;
     private List<Tile> grassTiles, desertTiles, mountainTiles, oceanTiles, snowTiles;
 
-    #endregion 
-
+    //Get list and variabel values
     private void Start()
     {
         tiles = GridManager.Instance.GetTiles();
         tileVectors = GridManager.Instance.GetSurroundingTiles(this);
         myTurn = FindMyTurn();
 
-                grassTiles = GridManager.Instance.GetGrassTiles();
+        grassTiles = GridManager.Instance.GetGrassTiles();
         desertTiles = GridManager.Instance.GetDesertTiles();
         mountainTiles = GridManager.Instance.GetMountainTiles();
         oceanTiles = GridManager.Instance.GetOceanTiles();
         snowTiles = GridManager.Instance.GetSnowTiles();
     }
+
+    #endregion 
 
     #region Highlight Functions/Tile Colours
     // Allow override in order for Tiles to have checkerboard pattern or not
@@ -381,7 +382,6 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
         #endregion
-
         
         #region Elf Turn
 
@@ -698,9 +698,13 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
     //Dice Battle
     public bool DiceBattle()
     {
+
         bool result;
         int playerDiceResult = Random.Range(1, 6);
         int enemyDiceResult = Random.Range(1, 6);
+
+        DiceScript.Instance.SetFinalDiceSide(playerDiceResult);
+        DiceScript.Instance.RollDice();
 
         if (playerDiceResult > enemyDiceResult)
         {
@@ -717,8 +721,11 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     #region Player controls Biome
+
+    //Currently not working - bool returning null
     public bool DiceBattleBiomeCheck(Vector2 myUnitPos)
     {
+
         bool result;
         int playerDiceResult;
         int enemyDiceResult = Random.Range(1, 6);
@@ -734,6 +741,8 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             playerDiceResult = Random.Range(1, 6);
         }
+
+        DiceScript.Instance.RollDice();
 
         if (playerDiceResult > enemyDiceResult)
         {
@@ -843,10 +852,9 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
         return result;
 
     }
-    #endregion 
+    #endregion  - Currently not working
 
-    #endregion
-
+    //Choose spawn function depending on a unit's faction
     public void UnitToSpawn(BaseUnit unit, Tile tileToSpawn)
     {
         if (unit.Faction == Faction.Human)
@@ -874,8 +882,7 @@ public abstract class Tile : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.Log("Invalid Faction");
         }
     }
-
-
+    #endregion
 
     #region FindTurn
 

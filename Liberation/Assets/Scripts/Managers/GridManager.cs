@@ -192,26 +192,31 @@ public class GridManager : MonoBehaviour
         return tileList;
     }
 
+    //Return list of grass tiles
     public List<Tile> GetGrassTiles()
     {
         return grassTiles;
     }
 
+    //Return list of desert tiles
     public List<Tile> GetDesertTiles()
     {
         return desertTiles;
     }
 
+    //Return list of mountain tiles
     public List<Tile> GetMountainTiles()
     {
         return mountainTiles;
     }
 
+    //Return list of ocean tiles
     public List<Tile> GetOceanTiles()
     {
         return oceanTiles;
     }
 
+    //Return list of snow tiles
     public List<Tile> GetSnowTiles()
     {
         return snowTiles;
