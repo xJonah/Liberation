@@ -37,7 +37,7 @@ public class DiceScript : MonoBehaviour
     // Coroutine that rolls the dice
     private IEnumerator RollTheDice()
     {
-        int randomDiceSide = 0;
+        int randomDiceSide = 1;
         // Loop to switch dice sides ramdomly
         // before final side appears. 10 itterations here.
         for (int i = 0; i <= 10; i++)
