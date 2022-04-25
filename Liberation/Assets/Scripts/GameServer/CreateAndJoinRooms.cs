@@ -23,7 +23,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public void CreateRoom() {
         var input = createInput.text;
         var hasNumber = new Regex(@"[0-9]+");
-        var hasMinimum6Chars = new Regex(@".{6,}");
+        var hasMinimum8Chars = new Regex(@".{8,}");
         var timeLimitSet = dropdown.value;
 
         //Room Options
@@ -35,7 +35,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
         //key validation(CyberSecurity)
 
-        if (!hasMinimum6Chars.IsMatch(input)) {
+        if (!hasMinimum8Chars.IsMatch(input)) {
             validationText.gameObject.SetActive(true);
             validationText.text = "Room key must contain 6 characters";
         }

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Photon.Chat.Demo;
 using TMPro;
+using System.Timers;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
@@ -17,6 +18,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] private string playerName;
     public TMP_Text messageArea;
     public TMP_InputField messageInput;
+    int spam = 0;
+    Timer timer = new Timer();
 
     #region Methods
 
@@ -36,6 +39,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         GetConnected();
 
+        //Timer
+        timer.Interval = 2000;
+        timer.Enabled = true;
     }
 
     //Connect using Photon Settings
@@ -59,6 +65,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         //Can press Enter to send a message
         if (Input.GetKeyUp(KeyCode.Return)) { SendMsg(); }
+
+        //Timer
+        timer.Elapsed += new ElapsedEventHandler(Timer_Elapsed);
     }
 
     //On connected join world chat
@@ -83,13 +92,30 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
+    //Reset spam value
+    private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        spam = 0;
+    }
+
     //Send message to world Chat
     public void SendMsg()
     {
         string message = messageInput.text;
-        if (message != "" && message.Length <= 100)
-        {
+
+        //Message Validation (Cybersecurity)
+        if (message == "") {
+            return;
+        } 
+        else if (message.Length > 250) {
+            chatClient.PublishMessage("World", playerName + "'s message is too long!");
+        }
+        else if (spam >= 5) {
+            chatClient.PublishMessage("World", "Avoid spamming!");
+        }
+        else {
             chatClient.PublishMessage("World", message);
+            spam++;
         }
         messageInput.text = "";
     }
