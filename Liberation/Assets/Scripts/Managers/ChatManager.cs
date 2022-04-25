@@ -19,7 +19,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public TMP_Text messageArea;
     public TMP_InputField messageInput;
     int spam = 0;
-    Timer timer = new Timer();
+    Timer timer = new Timer(2000);
 
     #region Methods
 
@@ -40,7 +40,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         GetConnected();
 
         //Timer
-        timer.Interval = 2000;
         timer.Enabled = true;
     }
 
@@ -111,7 +110,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             chatClient.PublishMessage("World", playerName + "'s message is too long!");
         }
         else if (spam >= 5) {
-            chatClient.PublishMessage("World", "Avoid spamming!");
+            Debug.Log("Avoid spamming!");
         }
         else {
             chatClient.PublishMessage("World", message);
