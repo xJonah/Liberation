@@ -37,11 +37,11 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
         if (!hasMinimum8Chars.IsMatch(input)) {
             validationText.gameObject.SetActive(true);
-            validationText.text = "Room key must contain 6 characters";
+            validationText.text = "Must contain 8 characters and a number";
         }
         else if (!hasNumber.IsMatch(input)) {
             validationText.gameObject.SetActive(true);
-            validationText.text = "Room key must contain a number";
+            validationText.text = "Must contain a number";
         }
         else if (timeLimitSet == 0) {
             validationText.gameObject.SetActive(true);

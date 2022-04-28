@@ -7771,6 +7771,7 @@ MonoBehaviour:
   playerName: 
   messageArea: {fileID: 644466914}
   messageInput: {fileID: 938150328}
+  sendButton: {fileID: 485386026}
 --- !u!4 &1391688142
 Transform:
   m_ObjectHideFlags: 0
